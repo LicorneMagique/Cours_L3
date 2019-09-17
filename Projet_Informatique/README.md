@@ -1,7 +1,6 @@
-# Source
+# Sources
 
-<http://perso.univ-lyon1.fr/fabien.rico/site/projet:start>
+- [Page du projet Kaggle](https://www.kaggle.com/c/whats-cooking/)
+- [Page de doc du prof](http://cazabetremy.fr/Teaching/Technos101.html)
 
 ## Notes
-
-**Kaggle :** exemples de deep learning

@@ -56,4 +56,5 @@ Une fonction f E^(1) → E1 est un cas particulier des relations pour lequel tou
 **Fonction surjective :** au moins un antécédent
 
 ---
+
 ## Cours grammaire
