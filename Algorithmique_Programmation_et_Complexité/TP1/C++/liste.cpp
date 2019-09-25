@@ -21,7 +21,6 @@ Liste::Liste(const Liste &l)
 Liste::~Liste()
 {
     this->vide();
-    //delete this;
 }
 
 void Liste::affichage() const
@@ -69,13 +68,13 @@ bool Liste::testListeVide() const
 void Liste::vide()
 {
     Cellule *tempCel = this->ad;
-    this->ad = nullptr;
     while (tempCel != NULL)
     {
         Cellule *toFree = tempCel;
         tempCel = tempCel->suivant;
         delete toFree;
     }
+    this->ad = nullptr;
 }
 
 Liste &Liste::operator=(const Liste &l)

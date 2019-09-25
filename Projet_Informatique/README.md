@@ -11,6 +11,7 @@
 
 - Nous avons commencé à suivre le tuto Notebook [A Detailed Explanation of Keras Embedding Layer](https://www.kaggle.com/rajmehra03/a-detailed-explanation-of-keras-embedding-layer) sur Kaggle
 - Notebook a l'air d'être une sorte d'IDE Python, pour l'installer on a utilisé [Anaconda](https://www.anaconda.com/)
+
   ```bash
   # Lancement d'Anaconda
   anaconda-navigator

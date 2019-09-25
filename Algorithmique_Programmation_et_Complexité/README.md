@@ -212,3 +212,7 @@ int main()
     return EXIT_SUCCESS;
 }
 ```
+
+## Cours 3
+
+### Notes cours 3
