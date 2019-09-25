@@ -15,6 +15,7 @@ int main()
     printf("\nRemplissage de Lili avec 1, 2, 3, 4\n");
     for (int i = 1; i < 5; i++)
         lili.ajout(i);
+    lili.ajout(2);
 
     printf("\nAffichage de Lili avec 1, 2, 3, 4\n");
     lili.affichage();

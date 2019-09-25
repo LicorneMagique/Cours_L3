@@ -39,21 +39,34 @@ void Skiplist::ajout(const Elem &e)
 {
     Cellule *tempCel = ad;
 
-    // On part du pointeur de suivant le plus haut
-    // Tant que son suivant n'est pas nul, est supérieur à 1 et est inférieur au nombre
-        // Alors on va au suivant
-    // Quand on ne peut plus on diminue d'un cran le pointeur de suivant
-    
-    int maxIndex = tempCel->suivant.size();
-    
-    while (tempCel->suivant.size() > 0 && tempCel->suivant[maxIndex].size())
+    int maxIndex = tempCel->suivant.size() - 1;
+
+    // On va au bon endroit dans la liste
+    while (tempCel->suivant.size() > 0) // Tant qu'il y a des éléments à parcourir
     {
-        tempCel = tempCel->suivant[0];
+        if (maxIndex > 1 && tempCel->suivant[maxIndex]->info >= e)
+            maxIndex--;
+
+        if (maxIndex <= 1 && tempCel->suivant[maxIndex]->info >= e)
+            break;
+
+        if (tempCel->suivant[maxIndex]->info < e)
+            tempCel = tempCel->suivant[maxIndex];
     }
-    tempCel->suivant.push_back(new Cellule);
-    tempCel->info = e;
 
-
+    // On insert la cellule
+    if (tempCel->suivant.size() < 1) // Si on est au bout de la liste
+    {
+        tempCel->suivant.push_back(new Cellule);
+        tempCel->info = e;
+    }
+    else
+    {
+        Cellule *tmp = tempCel->suivant[0];
+        tempCel->suivant[0] = new Cellule;
+        tempCel->suivant[0]->info = e;
+        tempCel->suivant[0]->suivant.push_back(tmp);
+    }
 }
 
 bool Skiplist::testSkiplistVide() const
