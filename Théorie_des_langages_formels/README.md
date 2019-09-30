@@ -58,3 +58,9 @@ Une fonction f E^(1) → E1 est un cas particulier des relations pour lequel tou
 ---
 
 ## Cours grammaire
+
+## Notes Coq
+
+Une grosse documentation similaire à nos cours se trouve sur [ce site](https://www.seas.upenn.edu/~cis500/cis500-f13/sf/toc.html)
+
+La correction du TP1 est trouvable sur [cette adresse](https://www.seas.upenn.edu/~cis500/cis500-f13/sf/Basics.html#lab15)
