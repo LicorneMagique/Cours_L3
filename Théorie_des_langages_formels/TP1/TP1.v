@@ -112,17 +112,9 @@ Definition non (a : booleens) : booleens :=
 (* Définir la fonction "et" sur les booléens. *)
 Definition et (a : booleens) (b : booleens) : booleens :=
   match a with
-    | Vrai =>
-      match b with
-        | Vrai => Vrai
-        | Faux => Faux
-        end
-    | Faux =>
-      match b with
-        | Vrai => Faux
-        | Faux => Faux
-        end
-    end.
+  | Vrai => b
+  | Faux => a
+  end.
 
 (* RÉPONSE ATTENDUE : Faux *)
 (* Compute (et Vrai (et Faux Vrai)).
@@ -136,17 +128,9 @@ Compute (et Faux Faux). *)
 (* Définir la fonction "ou" sur les booléens. *)
 Definition ou (a : booleens) (b : booleens) : booleens :=
   match a with
-    | Vrai =>
-      match b with
-        | Vrai => Vrai
-        | Faux => Vrai
-        end
-    | Faux =>
-      match b with
-        | Vrai => Vrai
-        | Faux => Faux
-        end
-    end.
+  | Vrai => a
+  | Faux => b
+  end.
 
 
 (* RÉPONSE ATTENDUE : Vrai *)
@@ -172,6 +156,13 @@ Inductive entiers : Type :=
 Definition un  := Succ Z.
 Definition deux  := Succ un.
 Definition trois  := Succ deux.
+Definition quatre  := Succ trois.
+Definition cinq  := Succ quatre.
+Definition six  := Succ cinq.
+Definition sept  := Succ six.
+Definition huit  := Succ sept.
+Definition neuf  := Succ huit.
+Definition dix  := Succ neuf.
 
 
 (* EXERCICE *)
@@ -181,8 +172,8 @@ Definition trois  := Succ deux.
 (* Le prédécesseur de quelque chose de la forme Succ toto est bien sûr toto *)
 Definition pred (a : entiers) : entiers :=
   match a with
-    | Z => Z
-    | Succ a => a
+  | Z => Z
+  | Succ a => a
   end.
 
 
@@ -206,22 +197,31 @@ de deux entiers. *)
 Fixpoint mult (a : entiers) (b : entiers) : entiers :=
   match a with
   | Z => Z
-  | 
+  | Succ a => plus b (mult a b)
   end.
 
 (* RÉSULTAT ATTENDU : 9 *)
-Compute (mult trois trois).
+(* Compute (mult trois trois). *)
 
 
 (* EXERCICE *)
 (* Définir une fonction est_pair, telle que est_pair APPLIQUÉE À un entier a
    RETOURNE Vrai si a est pair, Faux sinon. *)
+Fixpoint est_pair (a : entiers) : booleens :=
+  match a with
+  | Z => Vrai
+  | Succ Z => Faux
+  | Succ n => non (est_pair n)
+  end.
 
-(* RÉSULTAT ATTENDU : Vrai *)
-(* Compute (est_pair deux). *)
 
-(* RÉSULTAT ATTENDU : Faux *)
-(* Compute (est_pair trois). *)
+(* RÉSULTATS
+Compute (est_pair un).
+Compute (est_pair deux).
+Compute (est_pair trois).
+Compute (est_pair quatre).
+Compute (est_pair cinq).
+Compute (est_pair six). *)
 
 
 (* ------------------------------------------------------------ *)

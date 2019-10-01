@@ -1,6 +1,8 @@
 # Source
 
-<https://perso.liris.cnrs.fr/marc.plantevit/doku/doku.php?id=lif10_2016a>
+[Cours complets de l'année dernière](https://perso.liris.cnrs.fr/marc.plantevit/doku/doku.php?id=lifbdw2_2018a)
+
+[Cours de cette année](https://perso.liris.cnrs.fr/marc.plantevit/doku/doku.php?id=lifbdw2_2019a)
 
 ## Cours 1
 

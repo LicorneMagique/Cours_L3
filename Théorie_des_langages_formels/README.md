@@ -64,3 +64,31 @@ Une fonction f E^(1) → E1 est un cas particulier des relations pour lequel tou
 Une grosse documentation similaire à nos cours se trouve sur [ce site](https://www.seas.upenn.edu/~cis500/cis500-f13/sf/toc.html)
 
 La correction du TP1 est trouvable sur [cette adresse](https://www.seas.upenn.edu/~cis500/cis500-f13/sf/Basics.html#lab15)
+
+## Cours déterminisation
+
+### Notes déterminisation
+
+#### Élimination du nom déterminisme
+
+On commence par regarder à partir de chaque sommet q<sub>i</sub> où est-ce qu'on peut aller sans consommer autre chose que le caractère vide
+
+| q | E(q)         |
+| - | ------------ |
+| 0 | {0, 1, 2, 3} |
+| 1 | {1}          |
+| 2 | {2}          |
+| 3 | {3}          |
+
+Puis on regarde à partie de chaque élément de E(q') où est-ce qu'on peut aller en consommant un caractère
+
+| E(q')                       | a                     | b                     | c                     |
+| --------------------------- | --------------------- | --------------------- | --------------------- |
+| q<sub>0</sub>'={0, 1, 2, 3} | q<sub>1</sub>'={1, 2} | q<sub>2</sub>'={1, 3} | q<sub>3</sub>'={2, 3} |
+| q<sub>1</sub>'={1, 2}       | q<sub>1</sub>'={1, 2} | q<sub>4</sub>'={1}    | q<sub>5</sub>'={2}    |
+| q<sub>2</sub>'={1, 3}       | q<sub>4</sub>'={1}    | q<sub>2</sub>'={1, 3} | q<sub>6</sub>'={3}    |
+| q<sub>3</sub>'={2, 3}       | q<sub>5</sub>'={2}    | q<sub>6</sub>'={3}    | q<sub>3</sub>'={2, 3} |
+| q<sub>4</sub>'={1}          | q<sub>4</sub>'={1}    | q<sub>4</sub>'={1}    | q<sub>7</sub>'=∅      |
+| q<sub>5</sub>'={2}          | q<sub>5</sub>'={2}    | q<sub>7</sub>'=∅      | q<sub>5</sub>'={2}    |
+| q<sub>6</sub>'={3}          | q<sub>7</sub>'=∅      | q<sub>6</sub>'={3}    | q<sub>6</sub>'={3}    |
+| q<sub>7</sub>'=∅            | q<sub>7</sub>'=∅      | q<sub>7</sub>'=∅      | q<sub>7</sub>'=∅      |
