@@ -17,7 +17,7 @@ int main()
         lili.ajout(i);
     lili.ajout(2);
 
-    printf("\nAffichage de Lili avec 1, 2, 3, 4\n");
+    printf("\nAffichage de Lili avec 1, 2, 2, 3, 4\n");
     lili.affichage();
 
     /*printf("\nAjout de 10, 11, 12, 13, 14 sur Lili\n");
