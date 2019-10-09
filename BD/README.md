@@ -60,3 +60,30 @@ Soit r une relation sur R. Une DF R : X → Y est satisfaite dans r, noté r |= 
 3) 0 ≤ |R \ S| ≤ |r|
 4) 0 ≤ |π<sub>A</sub>(R)| ≤ |r|
 5) |R ⋊ S| = |R ∩ S| car les schémas sont les mêmes
+
+---
+
+## TD4
+
+### EX1
+
+| Partie gauche | Fermeture |
+| ------------- | --------- |
+| A             | A         |
+| B             | BE        |
+| C             | CE        |
+| D             | BDE       |
+| E             | E         |
+| AB            | ABCDE = R |
+| AC            | R         |
+| AD            | R         |
+| AE            | R         |
+| BC            | R         |
+| BD            | BDE       |
+| BE            | BDE       |
+| CD            | R         |
+| CE            | CE        |
+| DE            | BDE       |
+| BDE           | BDE       |
+
+Liste des DF : {}
