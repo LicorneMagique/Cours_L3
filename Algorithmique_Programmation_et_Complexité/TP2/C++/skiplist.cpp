@@ -1,125 +1,123 @@
 #include <cstdio>
 #include <cstdlib>
+#include <vector>
 #include "skiplist.h"
-
-Skiplist::Skiplist()
+ 
+SkipList::SkipList()
 {
-    ad = new Cellule;
+    this->ad = new Cellule;
+    this->ad->suivants.push_back(nullptr);
 }
-
-/*Skiplist::Skiplist(const Skiplist &l)
+ 
+SkipList::SkipList(const SkipList& l)
 {
-    ad = new Cellule;
-    Cellule *curseur = l.ad;
-
-    while (curseur != NULL)
+    this->ad = new Cellule;
+    this->ad->suivants.push_back(nullptr);
+    Cellule* tempCel = l.ad->suivants[0];
+    while(tempCel != nullptr)
     {
-        this->ajoutEnQueue(curseur->info);
-        curseur = curseur->suivant;
-    }
-}*/
-
-Skiplist::~Skiplist()
-{
-    //this->vide();
-}
-
-void Skiplist::affichage() const
-{
-    Cellule *curseur = ad;
-
-    while (curseur->suivant.size() > 0)
-    {
-        printf("Valeur : %d, taille : %d", curseur->info, (int)curseur->suivant.size());
-        for (int i = 0; i < curseur->suivant.size() - 1; i++);
-            printf("%d ", curseur->suivant[0]->info);
-        printf("\n");
-        curseur = curseur->suivant[0];
+        this->ajout(tempCel->info);
+        tempCel = tempCel->suivants[0];
     }
 }
-
-void Skiplist::ajout(const Elem &e)
+ 
+SkipList::~SkipList()
 {
-    Cellule *curseur = ad;
-    int niveauCurseur = curseur->suivant.size() - 1;
-
-    //std::vector<Cellule *> precedents;
-    //for (int i = 0; i < niveauCurseur + 1; i++)
-    //    precedents.push_back(nullptr);
-
-    // On va au bon endroit dans la liste
-    while (curseur->suivant.size() > 0 && niveauCurseur > 0) // Tant qu'il y a des éléments à parcourir
+    this->vide();
+}
+ 
+void SkipList::ajout(const Elem& e)
+{
+    std::vector<Cellule*> savedCels;
+    Cellule* tempCel = this->ad;
+    for(int i = this->ad->suivants.size()-1; i >= 0; i--)
     {
-        if (curseur->suivant[niveauCurseur] != nullptr)
-            if (curseur->suivant[niveauCurseur]->info < e)
-                curseur = curseur->suivant[niveauCurseur];
-            else
-                niveauCurseur--;
-        else
-            niveauCurseur--;
+        while(tempCel->suivants[i] != nullptr && tempCel->suivants[i]->info < e)
+        { tempCel = tempCel->suivants[i]; }
+        savedCels.push_back(tempCel);
     }
-
-    // On insert la cellule
-    if (curseur->suivant.size() < 1) // Si on est au bout de la liste
+ 
+    Cellule* newCel = new Cellule;
+    newCel->info = e;
+    newCel->suivants.push_back(tempCel->suivants[0]);
+    tempCel->suivants[0] = newCel;
+ 
+    for(int i = 1; rand()%2 == 1; i++)
     {
-        // Cas liste vide
-        if (curseur == ad)
+        if(i >= this->ad->suivants.size())
         {
-            curseur->suivant.push_back(new Cellule);
-            curseur = curseur->suivant[0];
+            this->ad->suivants.push_back(newCel);
+            newCel->suivants.push_back(nullptr);
         }
-        curseur->suivant.push_back(new Cellule);
-        curseur->suivant[0]->info = e;
+        else
+        {
+            newCel->suivants.push_back(savedCels[savedCels.size()-i-1]->suivants[i]);
+            savedCels[savedCels.size()-i-1]->suivants[i] = newCel;
+        }
     }
-    else
-    {
-        Cellule *tmp = curseur->suivant[0];
-        curseur->suivant[0] = new Cellule;
-        curseur->suivant[0]->info = e;
-        curseur->suivant[0]->suivant.push_back(tmp);
-        curseur = curseur->suivant[0];
-    }
-
-    // Ajout des niveaux
-    while ((rand()%2))
-    {
-        printf("test %d, ", curseur->info);
-        curseur->suivant.push_back(nullptr);
-    }
-    printf("\n");
-
 }
-
-bool Skiplist::testSkiplistVide() const
+ 
+void SkipList::affichage() const
 {
-    return ad->suivant.size() == 0;
-}
-
-/*void Skiplist::vide()
-{
-    Cellule *curseur = this->ad;
-    while (curseur != NULL)
+    Cellule* tempCel = this->ad;
+ 
+    printf("Affichage liste :\n");
+    while(tempCel->suivants[0] != nullptr)
     {
-        Cellule *toFree = curseur;
-        curseur = curseur->suivant;
+        tempCel = tempCel->suivants[0];
+        printf("%d -> ", tempCel->info);
+    }
+    printf("nullptr\n\n");
+}
+ 
+bool SkipList::testVide() const
+{
+    return this->ad->suivants[0] == nullptr;
+}
+ 
+void SkipList::vide()
+{
+    Cellule* tempCel = this->ad->suivants[0];
+    while(tempCel != nullptr)
+    {
+        Cellule* toFree = tempCel;
+        tempCel = tempCel->suivants[0];
         delete toFree;
     }
-    this->ad = nullptr;
-}*/
-
-/*Skiplist &Skiplist::operator=(const Skiplist &l)
+    this->ad->suivants.clear();
+    this->ad->suivants.push_back(nullptr);
+}
+ 
+Cellule* SkipList::rechercheElement(const Elem& e) const
 {
-    if (this == &l)
-        return *this;
-
-    ad = nullptr;
-    Cellule *curseur = l.ad;
-
-    while (curseur != NULL)
+    Cellule* tempCel = this->ad;
+    for(int i = this->ad->suivants.size()-1; i >= 0; i--)
     {
-        this->ajoutEnQueue(curseur->info);
-        curseur = curseur->suivant;
+        while(tempCel->suivants[i] != nullptr && tempCel->suivants[i]->info <= e)
+        { tempCel = tempCel->suivants[i]; }
     }
-
-    return *this;
-}*/
+    return tempCel;
+}
+ 
+void SkipList::supprimerElement(const Elem& e)
+{
+    std::vector<Cellule*> savedCels;
+    Cellule* tempCel = this->ad;
+    for(int i = this->ad->suivants.size()-1; i >= 0; i--)
+    {
+        while(tempCel->suivants[i] != nullptr && tempCel->suivants[i]->info < e)
+        { tempCel = tempCel->suivants[i]; }
+        savedCels.push_back(tempCel);
+    }
+ 
+    if(tempCel->suivants[0] != nullptr && tempCel->suivants[0]->info == e)
+        tempCel = tempCel->suivants[0];
+    else
+        return;
+ 
+    for(int i = 0; i < tempCel->suivants.size(); i++)
+    {
+        savedCels[savedCels.size() - 1 - i]->suivants[i] = tempCel->suivants[i];
+    }
+    delete tempCel;
+}

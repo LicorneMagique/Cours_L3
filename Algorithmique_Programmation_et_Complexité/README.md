@@ -213,6 +213,10 @@ int main()
 }
 ```
 
-## Cours 3
+## Cours 4
 
-### Notes cours 3
+### Notes cours 4
+
+Le **tri par insertion** est très efficace pour des données presque triées
+
+Le **tri par tas** est parfait pour des données très désordonnées
