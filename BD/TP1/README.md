@@ -82,8 +82,7 @@ insert into Rating values(208, 104, 3, to_date('02-01-2011', 'dd-mm-yyyy'));
     where director = name
     ```
 
-5. Retourner l’intégralité des évaluations, en remplaçant rID avec les noms des examinateurs et mID par les titres de films. Trier le résultat, d’abord par le nom de relecteur, puis par le titre de film, et enfin
-par le nombre d’étoiles.
+5. Retourner l’intégralité des évaluations, en remplaçant rID avec les noms des examinateurs et mID par les titres de films. Trier le résultat, d’abord par le nom de relecteur, puis par le titre de film, et enfin par le nombre d’étoiles.
 
     ```sql
     select name, title, stars, ratingDate
@@ -101,11 +100,8 @@ par le nombre d’étoiles.
     where mid not in (
         select mid
         from rating
-        where rid = (
-            select rid
-            from reviewer
-            where name = 'Chris Jackson'
-        )
+        join reviewer on rating.rid = reviewer.rid
+        where name = 'Chris Jackson'
     )
     ```
 
@@ -177,31 +173,83 @@ par le nombre d’étoiles.
 1. Lister les titres de films et leur note moyenne.
 
     ```sql
+    select title, avg(stars)
+    from movie
+    join rating on movie.mid = rating.mid
+    group by title
     ```
 
 2. Trouver le nom de tous les examinateurs qui ont fait au moins 3 évaluations.
 
     ```sql
+    select name
+    from reviewer
+    join rating on reviewer.rid = rating.rid
+    group by name
+    having count(name) >= 3
     ```
 
 3. Trouver le(s) film(s) ayant la meilleure moyenne de note. Retourner le titre de film, et la note moyenne.
 
     ```sql
+    select title, avg(stars)
+    from movie
+    join rating on movie.mid = rating.mid
+    group by title
+    having avg(stars) = (
+        select max(moyennes)
+        from (
+            select avg(stars) moyennes
+            from rating
+            group by mid
+        ) as moyenne
+    )
     ```
 
 4. Idem pour la plus mauvaise moyenne.
 
     ```sql
+    select title, avg(stars)
+    from movie
+    join rating on movie.mid = rating.mid
+    group by title
+    having avg(stars) = (
+        select min(moyennes)
+        from (
+            select avg(stars) moyennes
+            from rating
+            group by mid
+        ) as moyenne
+    )
     ```
 
 5. Trouver la différence entre la moyenne des notes des films (il faut bien calculer la moyenne pour chaque film, puis la moyenne des moyennes : il ne suffit pas de calculer simplement la moyenne des notes avant et après 1980) réalisés avant 1980 et ceux réalisés après.
 
     ```sql
+    select (avg(years1) - avg(years2)) difference
+    from (
+        select avg(stars) years1
+        from movie
+        join rating on movie.mid = rating.mid
+        where year < 1980
+        group by title
+    ) as avant, (
+        select avg(stars) years2
+        from movie
+        join rating on movie.mid = rating.mid
+        where year > 1980
+        group by title
+    ) as apres
     ```
 
 6. Pour chaque film, retourner le titre et la différence entre la meilleure et la plus mauvaise note pour un film donné. Trier par rapport à cette amplitude puis en fonction du titre.
 
     ```sql
+    select title, (max(stars) - min(stars)) difference
+    from movie join rating
+    on movie.mid = rating.mid
+    group by title
+    order by difference, title
     ```
 
 ## Exercice 5 : requêtes sur les valeurs nulles
@@ -209,11 +257,25 @@ par le nombre d’étoiles.
 1. Trouver les noms des examinateurs qui n’ont pas daté leurs évaluations.
 
     ```sql
+    select distinct name
+    from rating join reviewer
+    on rating.rid = reviewer.rid
+    where ratingdate is null
     ```
 
 2. Pour chaque réalisateur, retourner leur nom, titre de film(s) dirigés et ayant reçu la meilleure note de leur carrière. Retourner également cette note. Ignorer les films dont le réalisateur n’est pas spécifié.
 
     ```sql
+    select name, title, stars
+    from movie m
+    join rating r1 on m.mid = r1.mid
+    join reviewer on r1.rid = reviewer.rid
+    where r1.stars = (
+        select max(r2.stars)
+        from rating r2
+        where r2.mid = m.mid
+    )
+    order by name, title
     ```
 
 ## Exercice 6 : modification de la base de données
@@ -221,44 +283,91 @@ par le nombre d’étoiles.
 1. Ajouter un nouvel examinateur Roger Ebert dans la base de données avec un rID égal à 209.
 
     ```sql
+    insert into reviewer (name, rid)  values ('Roger Ebert', 209);
     ```
 
 2. Pour vérifier l’insertion précédente, écrire une requête pour retourner le nombre d’évaluateurs.
 
     ```sql
+    select * from reviewer where rid = 209
     ```
 
 3. Insérer des évaluations à 5 étoiles faites par Roger Ebert pour tous les films de la base. Laisser la date à NULL.
 
     ```sql
+    insert into rating (rid, mid, stars) values (209, 101, 5);
+    insert into rating (rid, mid, stars) values (209, 102, 5);
+    insert into rating (rid, mid, stars) values (209, 103, 5);
+    insert into rating (rid, mid, stars) values (209, 104, 5);
+    insert into rating (rid, mid, stars) values (209, 105, 5);
+    insert into rating (rid, mid, stars) values (209, 106, 5);
+    insert into rating (rid, mid, stars) values (209, 107, 5);
+    insert into rating (rid, mid, stars) values (209, 108, 5);
     ```
 
 4. Pour vérifier l’insertion précédente, retourner le nom des examinateurs qui ont noté tous les films.
 
     ```sql
+    select name
+    from reviewer
+    where rid in (
+        select distinct rid
+        from rating
+        group by rid
+        having count(mid) = (
+            select count(mid)
+            from movie
+        )
+    )
     ```
 
 5. Pour tous les films qui ont une note moyenne supérieure ou égale à 4, ajouter 25 ans à la date de réalisation (mettre à jour les tuples, ne pas en créer).
 
     ```sql
+    update movie
+    set year = year + 25
+    where mid in (
+        select mid
+        from rating
+        group by mid
+        having avg(stars) >= 4
+    )
     ```
 
 6. Pour vérifier la modification précédente, retourner le nombre de films réalisés avant 1990.
 
     ```sql
+    select count(mid)
+    from movie
+    where year < 1990
     ```
 
 7. Supprimer tous les films de la base à l’exception des films réalisés entre 2000 et 2010.
 
     ```sql
+    delete
+    from movie
+    where year < 2000 or year > 2010
     ```
 
 8. Maintenant, beaucoup d’évaluations réfèrent à des films qui ne sont plus dans la table Movie. Supprimer toutes les évaluations dont le film correspondant n’apparaît plus dans la table Movie.
 
     ```sql
+    delete
+    from rating
+    where mid not in (
+        select mid
+        from movie
+    )
     ```
 
 9. Maintenant, des évaluateurs n’ont plus aucune évaluation. Supprimer les examinateurs qui n’ont pas d’évaluation dans la table Rating.
 
     ```sql
+    delete
+    from reviewer
+    where rid not in (
+        select rid
+        from rating
+    )
     ```
