@@ -32,11 +32,9 @@ P = {(a, x), (x, a), (a, y), (y, a), ...}
 - *Plus* est une relation **ternaire** sur N<sup>3</sup> : `Plus = {(e1, e2, s), (3,5,8), ...}`
 - N'importe quelle fonction type inverse, racine... est une relation **binaire** sur N<sup>2</sup> `Inverse = {(1, -1), (7, -7), ...}`
 - **Relation réflexive** : une boucle sur chaque sommet (relation du sommet vers lui-même)
-- **Relation symétrique** :
+- **Relation réflexive** : R(a, a)
+- **Relation symétrique** : R(a, b) => R(b, a)
 - **Relation transitive** : R(a, b) & R(b, c) => R(a, c)
-- **Transition réflexive** :
-- **Transition symétrique** : R(a, b) => R(b, a)
-- **Transition transitive** :
 
 ---
 On pose R ⊂ E<sup>2</sup>  

@@ -87,3 +87,157 @@ Soit r une relation sur R. Une DF R : X → Y est satisfaite dans r, noté r |= 
 | BDE           | BDE       |
 
 Liste des DF : {}
+
+## Cours formes normales
+
+<https://openclassrooms.com/fr/courses/4055451-modelisez-et-implementez-une-base-de-donnees-relationnelle-avec-uml/4458402-optimisez-votre-modele-relationnel-avec-les-formes-normales>
+
+L'objectif du cours est d'arriver en 4<sup>ème</sup> forme normale
+
+- **1<sup>ère</sup> forme normale** : tous les éléments doivent être atomiques → **pas de liste**.  
+Exemple de passage à la première forme normale
+
+| id | pseudo | nom | email |
+| -- | ------ | --- | ----- |
+| 1 | Ed' la poignée | M. Édouard Bracame | edouard.bracame@joe-bar-team.org, ed@jbt.org |
+| 2 | Joe l'arsouille | M. Jean Manchzeck | jean.manchzeck@joe-bar-team.org |
+
+---
+
+| id | pseudo | civilité | prenom | nom | email 1 | email 2 |
+| -- | ------ | -------- | ------ | --- | ------- | ------- |
+| 1 | Ed' la poignée | M. | Édouard | Bracame | edouard.bracame@joe-bar-team.org | ed@jbt.org |
+| 2 | Joe l'arsouille | M. | Jean | Manchzeck | jean.manchzeck@joe-bar-team.org | |
+
+- **2<sup>ème</sup> forme normale** : 
+
+### Algorithme de normalisation
+
+En entrée on prend l'ensemble des attributs et l'ensemble des contraintes
+
+En sortie on veut un schéma de BD normalisé en 4<sup>ème</sup> forme normale
+
+---
+
+Soir R l'ensemble de nos relations et F les DF
+
+1. Construire une couverture canonique de F (virer les DF qu'on peut déduire)
+
+2. Pour chaque DF X → Y, créer une relation XY' (Disons qu'on avait projet → chef, budjet. Alors on ajoute deux nouvelles relations : projet → chef et projet → budjet)
+
+3. On supprime les schémas non maximaux par inclusion
+
+4. S'il y a perte de jointure alors on ajoute une relation composée d'une clé de F
+
+---
+
+### Exemple de l'algo
+
+R[ABCDEFGHI]  
+F = { D → AEI, E → CH, A → CI, I → A, H → C, C → DI, DE → ACI }
+
+1. D → ACDEHI, E → ACDEHI, A → ACDEHI, I → ACDEHI, H → ACDEHI, G → GF, C → ACDEHI, DE → ACDEHI
+
+suite sur papier
+
+## TD5
+
+### EX1
+
+1. ```math
+    F1 = {
+        A -> C,
+        AC -> D,
+        E -> AD,
+        E -> F
+    }
+    => {
+        A+ -> ACD
+        AC+ -> ACD
+        E+ -> ACDEF
+    }
+
+    F2 = {
+        A -> CD,
+        E -> AF
+    }
+    => {
+        A+ -> ACD
+        E+ -> ACDEF
+    }
+
+    Donc F1 <=> F2
+    ```
+
+2. ```math
+    G = {
+        A -> CD
+        E -> AF
+    }
+    ```
+
+3. ```math
+    F = {
+        A -> BC,
+        D -> E,
+        C -> D
+    } minimum ?
+    G = {
+        A -> ABCDE,
+        D -> DE,
+        C -> CDE
+    }
+    |G| = |F| => F est minimum.
+    ```
+
+### EX2 : sur papier
+
+### EX3
+
+1. **Cette question tombe souvent en  DS**
+
+F optimum => F minimum => F non redondant  
+F non optimum <= F non minimum <= F redondant  
+Donc il suffit de montrer que F redondant pour répondre à la question
+
+```math
+F = {
+    D -> A,
+    D -> C,
+    D -> E,
+    D -> F,
+    CE -> G,
+    AG -> F,
+    ADG -> B,
+    BG -> ADE,
+    BF -> DG
+}
+D -> C    D -> E
+----------------
+        D -> CE    CE -> G
+        ------------------
+                    D -> G    D -> A
+                    ----------------
+                            D -> GA    AG -> F
+                            ------------------
+                                    D -> F
+Donc redondance -> CQFD
+```
+
+2. ```math
+    {
+        D+   -> ABCDEFG,
+        CE+  -> CEG,
+        AG+  -> AFG,
+        ADG+ -> ABCDEFG,
+        BG+  -> ABCDEFG,
+        BF+  -> ABCDEFG
+    }
+    F = {
+        D  -> BF,
+        CE -> G,
+        AG -> F,
+        BG -> F,
+        BF -> ACDE
+    }
+    ```
