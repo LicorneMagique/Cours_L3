@@ -1,4 +1,6 @@
-# Vocabulaire
+# Cours d'anglais
+
+## Vocabulaire
 
 | Anglais | Définition | Traduction |
 | ------- | ---------- | ---------- |
@@ -44,3 +46,27 @@
 | To top out | To reach the highest amount or level and stop increasing | Atteindre son maximum / le sommet |
 | To weigh in | To bring one's weight or influence to bear especially as a contributor | / |
 | Unlikely | Improbable, not likely | Probablement pas |
+
+---
+
+## Présentation de la vidéo
+
+### Idées de présentation de la vidéo globale
+
+- We will show you the 5 first minutes of a video that shows and explains the future of the universe with scientist language. The whole video lasts 30 minutes but it's so interesting that you should watch it until the end when you'll be at home.
+
+- It starts in 2019 at the scale of the Earth and it ends at the end of everything, an unbelievable amount of time layer, at the scale of the multiverse. The speed of the time will increase exponentially, it'll twice every 5 seconds.
+
+- This video show everything we currently know about the universe and its future. That's a a thought [fôt] about the origin of life and what it means
+
+### Idées développés dans la vidéo
+
+- **Le devenir de notre planète** (changements climatiques, environnements...) : la Terre change à cause de l'Homme mais aussi à cause du soleil
+- **Le devenir du système solaire** : Mars, apparition de ses anneaux, saturne, ce qui arrive au soleil et les conséquences pour les autres planètes. Par extension le devenir de toutes les étoiles de l'univers qui vont notament s'éteindre
+- Tout est en mouvement, que ce soit la Terre, les systèmes solaires, les galaxies ou l'univers tout entier
+- Tout comme la Terre, l'univers possède des ères
+
+### En conclusion
+
+- Aussi pendant quelques minutes nous voyons des théories imaginables comme la présence d'autres univers
+- Enfin, les chercheurs n'ont pas encore trouvé toutes les réponses. Il reste de nombreuses choses à découvrir sur le monde qui nous entoure (new pieces to this puzzle aren't known, waiting to be found... by one of you maybe)
