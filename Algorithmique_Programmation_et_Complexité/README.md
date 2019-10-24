@@ -220,3 +220,21 @@ int main()
 Le **tri par insertion** est très efficace pour des données presque triées
 
 Le **tri par tas** est parfait pour des données très désordonnées
+
+## Cours Tables de Hachage
+
+On travail avec un **tableau statique**, on sait d'avance qu'il contient assez de place pour les x éléments, un **nombre premier** est une bonne taille pour un parcours optimisé, ou une **puissance de 2**
+
+On utilise une **fonction de hachage** qui nous donne un indice pour ranger l'élément dans le tableau, en réalité c'est du sha1 (anciennement md5)
+
+Hachage linéaire, hachage quadratique, double hachage
+
+La taille du tableau (nombre premier, puissance de 2) dépend du pas utilisé pour aller au "suivant" quand on est sur une case prise (voir pdf)
+
+En cas de **collision**, tant que la case n'est pas libre, on essaie l'emplacement d'indice fonctionPas(indice)
+
+En cas de suppression on met un tag sur la case pour dire qu'elle a été occupée, le but est de permettre la recherche d'un élément
+
+Recherche d'un élément : calculer h(élément), aller au rang de cette valeur et tant que la case n'est pas l'élément et (qu'elle en contient un autre ou qu'elle en a contenu un autre) alors on regarde la case suivante
+
+Le constructeur d'une table prend en parametres la fonction de hachage et la fonction de pas
