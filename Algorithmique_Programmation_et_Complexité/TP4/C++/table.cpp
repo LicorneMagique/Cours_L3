@@ -14,7 +14,7 @@ Node::Node()
     this->occurence_pas = 0;
 }
 
-Table::Table(int _hash(Key, int), int _pas(int, int, int), const int _size)
+Table::Table(int _hash(Key, int), int _pas(Key, int, int, int), const int _size)
 {
     this->hash = _hash;
     this->pas = _pas;
@@ -30,8 +30,8 @@ Table::~Table()
 void Table::show()
 {
     Node n;
-    cout << setfill(' ') << endl << "indice" << setw(12) << "clé"
-         << setw(14) << "valeur" << setw(20) << "occurence(s)"
+    cout << setfill(' ') << endl << "indice" << setw(12) << "clé" << setw(14)
+         << "valeur" << setw(20) << "occurence(s) : " << this->getOccurence()
          << endl << setfill('-') << setw(51) << "-" << endl;
     for (int i = 0; i < size; i++)
     {
@@ -47,9 +47,11 @@ void Table::add(const Key cle, const Value val)
     int i = hash(cle, size); // indice d'insertion
     int o = 0; // occurence d'utilisation du ré-hashage
     while (tab[i].active && o < size)
-        i = pas(i, ++o, size);
+    {
+        i = pas(cle, i, ++o, size);
+    }
     if (o == size)
-        cout << "Plus de place" << endl;
+        cout << "Plus de place : " << cle << "/" << val << endl;
     else
     {
         Node* n = &tab[i];
@@ -58,4 +60,15 @@ void Table::add(const Key cle, const Value val)
         n->value = val;
         n->occurence_pas = o;
     }
+}
+
+int Table::getOccurence()
+{
+    int o = 0;
+    for (int i = 0; i < size; i++)
+    {
+        if (tab[i].active)
+            o++;
+    }
+    return o;
 }
