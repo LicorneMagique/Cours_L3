@@ -13,6 +13,7 @@ class Node
         Key key;
         Value value;
         bool active;
+        bool was_active;
         int occurence_pas;
 };
 
@@ -31,13 +32,16 @@ class Table
         void add(const Key, const Value);
         void remove(const Key);
         void show();
+        int getEchec();
         int getOccurence();
         int search(const Key);
         Node getNode(const Key);
+        std::string getInfo();
 
     private :
         Node* tab;
         int size;
+        int echec;
 };
 
 #endif
