@@ -92,24 +92,97 @@ Liste des DF : {}
 
 <https://openclassrooms.com/fr/courses/4055451-modelisez-et-implementez-une-base-de-donnees-relationnelle-avec-uml/4458402-optimisez-votre-modele-relationnel-avec-les-formes-normales>
 
-L'objectif du cours est d'arriver en 4<sup>ème</sup> forme normale
+L'objectif du cours est d'arriver en 4<sup>ème</sup> forme normale (Forme normale de Boyce-Codd)
 
 - **1<sup>ère</sup> forme normale** : tous les éléments doivent être atomiques → **pas de liste**.  
 Exemple de passage à la première forme normale
 
-| id | pseudo | nom | email |
-| -- | ------ | --- | ----- |
-| 1 | Ed' la poignée | M. Édouard Bracame | edouard.bracame@joe-bar-team.org, ed@jbt.org |
-| 2 | Joe l'arsouille | M. Jean Manchzeck | jean.manchzeck@joe-bar-team.org |
+| (id) | email |
+| ---- | ----- |
+| 1    | edouard.bracame@joe-bar-team.org, ed@jbt.org |
+| 2    | jean.manchzeck@joe-bar-team.org |
+
+↓↓↓↓↓↓↓↓↓↓↓↓
+
+| (id) | email |
+| ---- | ----- |
+| 1    | edouard.bracame@joe-bar-team.org |
+| 1    | ed@jbt.org |
+| 2    | jean.manchzeck@joe-bar-team.org |
+
+- **2<sup>ème</sup> forme normale** : tous les éléments d'une table avec une clé primaire **composite** (composée de plusieurs attributs) doivent dépendre de toute la clé primaire, pas d'un sous-ensemble de celle-ci.  
+Exemple :
+
+| (coureur | parcours) | difficulté | note |
+| -------- | --------- | ---------- | ---- |
+| michel   | p1        | 4          | 12/20 |
+| bob      | p1        | 4          | 14/20 |
+| michel   | p2        | 2          | 18/20 |
+
+La difficulté dépend du parcours et non de la combinaison (parcours, coureur). Il faut donc créer une table associative...
+
+↓↓↓↓↓↓↓↓↓↓↓↓
+
+| (coureur | parcours) | note |
+| -------- | --------- | ---- |
+| michel   | p1        | 12/20 |
+| bob      | p1        | 14/20 |
+| michel   | p2        | 18/20 |
+
+| (parcours) | note |
+| ---------- | ---- |
+| p1         | 4 |
+| p2         | 2 |
+
+- **3<sup>ème</sup> forme normale** : tous les éléments d'une table doivent dépendre de la clé primaire, pas d'un autre élément.  
+Exemple :
+
+| (id) | civilité | nom | prenom | sexe |
+| -- | ---------- | --- | ------ | ---- |
+| 1  | Madame     | Germain | Sophie | F |
+| 2  | Monsieur   | Hilbert | David  | M |
+| 3  | Madame     | Noether | Emmy   | F |
+
+Le sexe dépend de la civilité, ou l'inverse...
+
+↓↓↓↓↓↓↓↓↓↓↓↓
+
+| (id) | civilité | nom | prenom |
+| -- | ---------- | --- | ------ |
+| 1  | Madame     | Germain | Sophie |
+| 2  | Monsieur   | Hilbert | David  |
+| 3  | Madame     | Noether | Emmy   |
+
+| (civilité) | sexe |
+| ---------- | ---- |
+| Madame     | F |
+| Monsieur   | M |
+
+- **Forme normale de Boyce-Codd** : certain(s) élément(s) d'une table avec une clé primaire composite permettent de déterminer une partie de la clé primaire.  
+Exemple :
+
+| (num_sécu | pays) | nom | région |
+| --------- | ----- | --- | ------ |
+| 1..1      | France  | Michel | Rhône |
+| 1..1      | Espagne | Paul   | Catalogne |
+
+Certe on peut retrouver le nom et la région à partir de la clé primaire, mais la région permet aussi de déterminer le pays...
+
+↓↓↓↓↓↓↓↓↓↓↓↓
+
+| (num_sécu | région) | nom |
+| --------- | ------- | --- |
+| 1..1      | Rhône     | Michel |
+| 1..1      | Catalogne | Paul |
+
+| (région) | pays |
+| -------- | ---- |
+| Catalogne | Espagne |
+| Rhône     | France |
+
+**Il arrive cependant que des DF ne survivent pas à ce changement de forme normale.
 
 ---
-
-| id | pseudo | civilité | prenom | nom | email 1 | email 2 |
-| -- | ------ | -------- | ------ | --- | ------- | ------- |
-| 1 | Ed' la poignée | M. | Édouard | Bracame | edouard.bracame@joe-bar-team.org | ed@jbt.org |
-| 2 | Joe l'arsouille | M. | Jean | Manchzeck | jean.manchzeck@joe-bar-team.org | |
-
-- **2<sup>ème</sup> forme normale** : 
 
 ### Algorithme de normalisation
 
