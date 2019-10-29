@@ -20,24 +20,29 @@ int hash_modulo_taille_deux(Key k, int s)
 }
 
 // Fonctions de ré-hashage (i:indice; o:occurence; s:size)
-int pas_lineaire(Key k, int i, int o, int s)
+int pas_lineaire(Key k, int i, int o, int s, int hash(Key, int))
 {
     return (i+1)%s;
 }
 
-int pas_quadratique(Key k, int i, int o, int s)
+int pas_quadratique(Key k, int i, int o, int s, int hash(Key, int))
 {
     return (int)(i + pow(o-1, 2))%s;
 }
 
-int pas_double(Key k, int i, int o, int s)
+int pas_double(Key k, int i, int o, int s, int hash(Key, int))
 {
-    // Formule inspirée de <https://www.geeksforgeeks.org/double-hashing/>
+    // Formule trouvée sur https://www.geeksforgeeks.org/double-hashing/
     // Double hashing -> hash1(key) + i * hash2(key)) % TABLE_SIZE
-    int h1 = (k+1)%s;
+    // hash1(key) -> key%TABLE_SIZE
+    // hash2(key) -> prime - (key%prime)
+    // prime = TABLE_SIZE/2
+    // i le premier indice testé pour l'insertion, incrémenté de 1 après chaque échec
+    int h1 = k%s;
     int p = s/2;
     int h2 = p - (k%p);
-    return (h1 + i * h2)%s;
+    int _i = hash(k, s) + o-1;
+    return (h1 + _i * h2)%s;
 }
 
 int main()
@@ -58,7 +63,7 @@ int main()
     t.add(20, 3);
     t.add(25, 4);
     t.add(42, 5);
-    cout << endl << "t a " << t.getInfo() << endl;
+    cout << endl << "t : " << t.getInfo() << endl;
     t.show();
     
     t2.add(0, 0);
@@ -67,7 +72,7 @@ int main()
     t2.add(20, 3);
     t2.add(25, 4);
     t2.add(42, 5);
-    cout << endl << "t2 a " << t2.getInfo() << endl;
+    cout << endl << "t2 : " << t2.getInfo() << endl;
     t2.show();
     
     t3.add(0, 0);
@@ -76,7 +81,7 @@ int main()
     t3.add(20, 3);
     t3.add(25, 4);
     t3.add(42, 5);
-    cout << endl << "t3 a " << t3.getInfo() << endl;
+    cout << endl << "t3 : " << t3.getInfo() << endl;
     t3.show();
 
     cout << endl << "Affichage de t, t2 et t3 après deux tentatives de suppression de l'avant dernière valeur (clé 25) :" << endl << endl;
@@ -129,12 +134,12 @@ int main()
          << endl << "Il n'y a donc pas la clé 42 dans t3" << endl;
 
     int global_size2 = 500;
-    Table t4 = Table(hash_modulo_taille_deux, pas_lineaire, global_size2);
-    Table t5 = Table(hash_modulo_taille_deux, pas_quadratique, global_size2);
-    Table t6 = Table(hash_modulo_taille_deux, pas_double, global_size2);
+    Table t4 = Table(hash_modulo_taille, pas_lineaire, global_size2);
+    Table t5 = Table(hash_modulo_taille, pas_quadratique, global_size2);
+    Table t6 = Table(hash_modulo_taille, pas_double, global_size2);
     int key;
     double value;
-    for (int i = 0; i < 800; i++)
+    for (int i = 0; i < 700; i++)
     {
         key = rand()%1000;
         value = (double)rand() / 1000;
@@ -142,13 +147,12 @@ int main()
         if (t5.search(key) == -1) t5.add(key, value);
         if (t6.search(key) == -1) t6.add(key, value);
     }
-    // Il faut gérer les erreurs d'insertion double d'une clé et on pourrq virer les if ici
     
     cout << endl << "Infos de t4, t5 et t6 après un grand nombre d'insertions :" << endl;
 
-    cout << endl << "t4 a " << t4.getInfo() << endl;
-    cout << "t5 a " << t5.getInfo() << endl;
-    cout << "t6 a " << t6.getInfo() << endl;
+    cout << endl << "t4 : " << t4.getInfo() << endl;
+    cout << "t5 : " << t5.getInfo() << endl;
+    cout << "t6 : " << t6.getInfo() << endl;
 
     return 0;
 }

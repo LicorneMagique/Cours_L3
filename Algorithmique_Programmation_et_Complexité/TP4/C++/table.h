@@ -21,12 +21,12 @@ class Table
 {
     public :
         // Constructeur ---- Destructeur
-        Table(int(Key, int), int(Key, int, int, int), const int);
+        Table(int(Key, int), int(Key, int, int, int, int(Key, int)), const int);
         ~Table();
 
         // Fonctions passées au constructeur
         int (*hash)(Key, int);
-        int (*pas)(Key, int, int, int); // re_hashage
+        int (*pas)(Key, int, int, int, int(Key, int)); // re_hashage
 
         // Fonctions de manipulation de la table
         void add(const Key, const Value);
@@ -34,6 +34,7 @@ class Table
         void show();
         int getEchec();
         int getOccurence();
+        int getSize();
         int search(const Key);
         Node getNode(const Key);
         std::string getInfo();

@@ -15,7 +15,7 @@ Node::Node()
     this->occurence_pas = 0;
 }
 
-Table::Table(int _hash(Key, int), int _pas(Key, int, int, int), const int _size)
+Table::Table(int _hash(Key, int), int _pas(Key, int, int, int, int(Key, int)), const int _size)
 {
     this->hash = _hash;
     this->pas = _pas;
@@ -49,13 +49,14 @@ void Table::add(const Key cle, const Value val)
     int i = hash(cle, size); // indice d'insertion
     int o = 0; // occurence d'utilisation du ré-hashage
     while (tab[i].active && o < size)
-        i = pas(cle, i, ++o, size);
-    if (o == size)
+        i = pas(cle, i, ++o, size, hash);
+    if (o == size || tab[i].active)
         echec++;
     else
     {
         Node* n = &tab[i];
         n->active = true;
+        n->was_active = true;
         n->key = cle;
         n->value = val;
         n->occurence_pas = o;
@@ -80,7 +81,9 @@ int Table::getEchec()
 
 string Table::getInfo()
 {
-    return to_string(this->getOccurence()) + " occurence(s) et " + to_string(this->getEchec()) + " échec(s)";
+    return "taille = " + to_string(this->getSize()) + ", " +
+        to_string(this->getOccurence()) + " occurence(s), " +
+        to_string(this->getEchec()) + " échec(s)";
 }
 
 void Table::remove(Key cle)
@@ -102,9 +105,22 @@ int Table::search(Key cle)
     int i = hash(cle, size); // indice d'insertion
     int o = 0; // occurence d'utilisation du ré-hashage
     while (tab[i].was_active && tab[i].key != cle && o < size)
-        i = pas(cle, i, ++o, size);
-    if (!tab[i].active || o == size)
-        return -1;
-    else
+        i = pas(cle, i, ++o, size, hash);
+    if (tab[i].active && tab[i].key == cle)
         return i;
+    return -1;
+}
+
+int Table::getSize()
+/**
+ * Retourne la taille occupée
+ */
+{
+    int s = 0;
+    for (int i = 0; i < size; i++)
+    {
+        if (tab[i].active)
+            s++;
+    }
+    return s;
 }
