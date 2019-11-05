@@ -1,3 +1,7 @@
+/**
+ * Réalisé par Julien GIRAUD - 2019
+ */
+
 #ifndef _TABLE
 #define _TABLE
 
@@ -31,13 +35,15 @@ class Table
         // Fonctions de manipulation de la table
         void add(const Key, const Value);
         void remove(const Key);
+        void setValue(const Key, const Value);
         void show();
         int getEchec();
         int getOccurence();
         int getSize();
         int search(const Key);
-        Node getNode(const Key);
         std::string getInfo();
+        Node getNode(const Key);
+        Value getValue(const Key);
 
     private :
         Node* tab;

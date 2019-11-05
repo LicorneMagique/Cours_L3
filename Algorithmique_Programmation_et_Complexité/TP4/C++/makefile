@@ -17,4 +17,4 @@ run :
 	./main
 
 clean :
-	rm main main.o table.o .gitignore
+	rm main .gitignore *.o *.txt

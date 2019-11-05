@@ -1,9 +1,12 @@
-//#include <cstdio>
-//#include <cstdlib>
-//#include <ctime>
-//#include <chrono>
+/**
+ * Réalisé par Julien GIRAUD - 2019
+ */
+
+#include <chrono>
 #include <cmath>
+#include <fstream>
 #include <iostream>
+#include <iomanip>
 #include "table.h"
 
 using namespace std;
@@ -133,26 +136,108 @@ int main()
     cout << endl << "Recherche de la clé 42 dans t3 : " << t3.search(42)
          << endl << "Il n'y a donc pas la clé 42 dans t3" << endl;
 
-    int global_size2 = 500;
+    cout << endl << "Récupération de la valeur associée à la clé 25 dans t : " << t.getValue(25) << endl;
+    cout << "Modification de la valeur associée à cette clé (nouvelle valeur = 42)" << endl;
+    t.setValue(25, 42);
+    cout << "Récupération de la nouvelle valeur associée à la clé 25 : " << t.getValue(25) << endl;
+
+    string const fichier_resultats_1 = "./performance_lineaire.txt";
+    string const fichier_resultats_2 = "./performance_quadratique.txt";
+    string const fichier_resultats_3 = "./performance_double.txt";
+    ofstream file_1(fichier_resultats_1.c_str());
+    ofstream file_2(fichier_resultats_2.c_str());
+    ofstream file_3(fichier_resultats_3.c_str());
+    
+    file_1 << "# \"nb\" \"temps\"" << endl;
+    file_2 << "# \"nb\" \"temps\"" << endl;
+    file_3 << "# \"nb\" \"temps\"" << endl;
+
+    int global_size2 = 10007; // Nombre premier
+    int global_size3 = 8192; // Puissance de 2
+    int global_size4 = 10000; // Nombre quelconque
+    
     Table t4 = Table(hash_modulo_taille, pas_lineaire, global_size2);
     Table t5 = Table(hash_modulo_taille, pas_quadratique, global_size2);
     Table t6 = Table(hash_modulo_taille, pas_double, global_size2);
-    int key;
+    Key key, max_key = 20000;
+    int perf;
     double value;
-    for (int i = 0; i < 700; i++)
+    std::chrono::time_point<std::chrono::system_clock> start, end;
+    for (int i = 0; i < global_size2; i++)
     {
-        key = rand()%1000;
+        key = rand()%max_key;
         value = (double)rand() / 1000;
         if (t4.search(key) == -1) t4.add(key, value);
         if (t5.search(key) == -1) t5.add(key, value);
         if (t6.search(key) == -1) t6.add(key, value);
-    }
-    
-    cout << endl << "Infos de t4, t5 et t6 après un grand nombre d'insertions :" << endl;
+        if (i && i%1000 == 0)
+        {
+            start = std::chrono::system_clock::now();
+            for (int j = 0; j < max_key; j++)
+                t4.search(j);
+            end = std::chrono::system_clock::now();
+            perf = std::chrono::duration_cast<std::chrono::microseconds>(end - start).count();
+            file_1 << perf << " " << i << endl;
 
+            start = std::chrono::system_clock::now();
+            for (int j = 0; j < max_key; j++)
+                t5.search(j);
+            end = std::chrono::system_clock::now();
+            perf = std::chrono::duration_cast<std::chrono::microseconds>(end - start).count();
+            file_2 << perf << " " << i << endl;
+
+            start = std::chrono::system_clock::now();
+            for (int j = 0; j < max_key; j++)
+                t6.search(j);
+            end = std::chrono::system_clock::now();
+            perf = std::chrono::duration_cast<std::chrono::microseconds>(end - start).count();
+            file_3 << perf << " " << i << endl;
+        }
+    }
+
+    cout << endl << "Infos de t4, t5 et t6 après un grand nombre d'insertions avec un nombre premier en taille :" << endl;
     cout << endl << "t4 : " << t4.getInfo() << endl;
     cout << "t5 : " << t5.getInfo() << endl;
     cout << "t6 : " << t6.getInfo() << endl;
+    cout << "-> Double hashage gagnant, globalement ils sont tous efficaces" << endl;
+
+    Table t7 = Table(hash_modulo_taille, pas_lineaire, global_size3);
+    Table t8 = Table(hash_modulo_taille, pas_quadratique, global_size3);
+    Table t9 = Table(hash_modulo_taille, pas_double, global_size3);
+    for (int i = 0; i < global_size3; i++)
+    {
+        key = rand()%max_key;
+        value = (double)rand() / 1000;
+        if (t7.search(key) == -1) t7.add(key, value);
+        if (t8.search(key) == -1) t8.add(key, value);
+        if (t9.search(key) == -1) t9.add(key, value);
+    }
+    cout << endl << "Infos de t7, t8 et t9 après un grand nombre d'insertions avec une puissance de 2 en taille :" << endl;
+    cout << endl << "t7 : " << t7.getInfo() << endl;
+    cout << "t8 : " << t8.getInfo() << endl;
+    cout << "t9 : " << t9.getInfo() << endl;
+    cout << "-> Re-hashage quadratique gagnant" << endl;
+    cout << "-> Le double-hashage est presque aussi rapide que le quadratique mais il n'a pas pu insérer certains éléments" << endl;
+    cout << "-> Le ré-hashage linéaire est très mauvais en vitesse" << endl;
+
+    Table t10 = Table(hash_modulo_taille, pas_lineaire, global_size4);
+    Table t11 = Table(hash_modulo_taille, pas_quadratique, global_size4);
+    Table t12 = Table(hash_modulo_taille, pas_double, global_size4);
+    for (int i = 0; i < global_size4; i++)
+    {
+        key = rand()%max_key;
+        value = (double)rand() / 1000;
+        if (t10.search(key) == -1) t10.add(key, value);
+        if (t11.search(key) == -1) t11.add(key, value);
+        if (t12.search(key) == -1) t12.add(key, value);
+    }
+    cout << endl << "Infos de t10, t11 et t12 après un grand nombre d'insertions avec un nombre quelconque comme taille :" << endl;
+    cout << endl << "t10 : " << t10.getInfo() << endl;
+    cout << "t11 : " << t11.getInfo() << endl;
+    cout << "t12 : " << t12.getInfo() << endl;
+    cout << "-> Re-hashage quadratique gagnant" << endl;
+    cout << "-> Le hashage linéaire est presque aussi rapide le quadratique" << endl;
+    cout << "-> Le double-hashage est très mauvais en vitesse en plus de n'avoir pas pu insérer certains éléments" << endl;
 
     return 0;
 }

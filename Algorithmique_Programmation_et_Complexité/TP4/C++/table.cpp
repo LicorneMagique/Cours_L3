@@ -1,7 +1,7 @@
-//#include <cstdio>
-//#include <cstdlib>
-//#include <ctime>
-//#include <chrono>
+/**
+ * Réalisé par Julien GIRAUD - 2019
+ */
+
 #include <iostream>
 #include <iomanip>
 #include "table.h"
@@ -123,4 +123,22 @@ int Table::getSize()
             s++;
     }
     return s;
+}
+
+void Table::setValue(const Key cle, const Value val)
+/**
+ * Pré-condition : la clé se trouve dans la table
+ */
+{
+    int i = search(cle);
+    tab[i].value = val;
+}
+
+Value Table::getValue(const Key cle)
+/**
+ * Pré-condition : la clé se trouve dans la table
+ */
+{
+    int i = search(cle);
+    return tab[i].value;
 }
