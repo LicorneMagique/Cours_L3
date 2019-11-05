@@ -292,35 +292,37 @@ suite sur papier
 
 1. **Cette question tombe souvent en  DS**
 
-F optimum => F minimum => F non redondant  
-F non optimum <= F non minimum <= F redondant  
-Donc il suffit de montrer que F redondant pour répondre à la question
+    F optimum => F minimum => F non redondant  
+    F non optimum <= F non minimum <= F redondant  
+    Donc il suffit de montrer que F redondant pour répondre à la question
+
+    ```math
+    F = {
+        D -> A,
+        D -> C,
+        D -> E,
+        D -> F,
+        CE -> G,
+        AG -> F,
+        ADG -> B,
+        BG -> ADE,
+        BF -> DG
+    }
+    D -> C    D -> E
+    ----------------
+            D -> CE    CE -> G
+            ------------------
+                        D -> G    D -> A
+                        ----------------
+                                D -> GA    AG -> F
+                                ------------------
+                                        D -> F
+    Donc redondance -> CQFD
+    ```
+
+2. )
 
 ```math
-F = {
-    D -> A,
-    D -> C,
-    D -> E,
-    D -> F,
-    CE -> G,
-    AG -> F,
-    ADG -> B,
-    BG -> ADE,
-    BF -> DG
-}
-D -> C    D -> E
-----------------
-        D -> CE    CE -> G
-        ------------------
-                    D -> G    D -> A
-                    ----------------
-                            D -> GA    AG -> F
-                            ------------------
-                                    D -> F
-Donc redondance -> CQFD
-```
-
-2. ```math
     {
         D+   -> ABCDEFG,
         CE+  -> CEG,
@@ -336,4 +338,37 @@ Donc redondance -> CQFD
         BG -> F,
         BF -> ACDE
     }
+```
+
+## TD6
+
+### EX1
+
+| Question | Relation | 2FN | 3FN | FNBC | 4FN |
+| -------- | -------- | --- | --- | ---- | --- |
+| 1        | E -> D   | oui | oui | oui  | oui |
+| 1        | D -> C   | oui | oui | oui  | oui |
+| 2        | E -> S   | oui |
+| 2        | E ->> F  | non |
+| 3        | RV -> C  | oui | oui | oui |
+| 3        | C -> V   | oui | oui | non |
+
+### EX2
+
+Par principe je ne fais pas de démonstrations sur les ensembles en BD
+
+### EX3
+
+1. )
+
+    ```math
+    {
+        NumR -> NomR, TypeR
+        NumI -> NomI
+        NumR, NumI -> Qte
+    }
     ```
+
+2. )
+
+    Il y a un problème de redondance
