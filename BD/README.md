@@ -129,8 +129,8 @@ La difficulté dépend du parcours et non de la combinaison (parcours, coureur).
 | bob      | p1        | 14/20 |
 | michel   | p2        | 18/20 |
 
-| (parcours) | note |
-| ---------- | ---- |
+| (parcours) | difficulté |
+| ---------- | ---------- |
 | p1         | 4 |
 | p2         | 2 |
 
@@ -207,9 +207,32 @@ Soir R l'ensemble de nos relations et F les DF
 ### Exemple de l'algo
 
 R[ABCDEFGHI]  
-F = { D → AEI, E → CH, A → CI, I → A, H → C, C → DI, DE → ACI }
+F = {
+    D → AEI,
+    E → CH,
+    A → CI,
+    I → A,
+    H → C,
+    C → DI,
+    DE → ACI
+}
 
-1. D → ACDEHI, E → ACDEHI, A → ACDEHI, I → ACDEHI, H → ACDEHI, G → GF, C → ACDEHI, DE → ACDEHI
+1. D+ → ACDEHI,
+    E+ → ACDEHI,
+    A+ → ACDEHI,
+    I+ → ACDEHI,
+    H+ → ACDEHI,
+    G+ → GF,
+    C+ → ACDEHI,
+    DE+ → ACDEHI
+
+    D → E,
+    E → A,
+    A → I,
+    I → H,
+    H → C,
+    G → F,
+    C → D
 
 suite sur papier
 
