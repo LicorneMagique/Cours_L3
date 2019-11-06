@@ -238,3 +238,25 @@ En cas de suppression on met un tag sur la case pour dire qu'elle a été occup�
 Recherche d'un élément : calculer h(élément), aller au rang de cette valeur et tant que la case n'est pas l'élément et (qu'elle en contient un autre ou qu'elle en a contenu un autre) alors on regarde la case suivante
 
 Le constructeur d'une table prend en parametres la fonction de hachage et la fonction de pas
+
+## Cours Arbres Binaires
+
+### Constructeurs
+
+- new ABR() -> retourne arbre vide
+- new ABR(arbre) -> retourne copie de "arbre"
+- new ABR(element, sag, sad) -> retourne un arbre avec element comme racine et sag comme sous-arbre gauche et sad comme sous-arbre droit (par copie)
+
+```C++
+Class Arbre
+{
+    Noeud * racine;
+}
+
+Class Noeud
+{
+    Element info;
+    Noeud * gauche;
+    Noeud * droit;
+}
+```
