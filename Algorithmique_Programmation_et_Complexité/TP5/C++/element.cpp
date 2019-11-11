@@ -1,3 +1,7 @@
+/**
+ * Réalisé par Julien GIRAUD - 2019
+ */
+
 #include <cstdio>
 #include "element.h"
 

@@ -1,33 +1,52 @@
-#include <cstdio>
-#include <cstdlib>
-#include <ctime>
-#include <chrono>
+/**
+ * Réalisé par Julien GIRAUD - 2019
+ */
+
+//#include <cstdio>
+//#include <cstdlib>
 #include <iostream>
 #include "element.h"
-#include "skiplist.h"
- 
+#include "abr.h"
+
+using namespace std;
+
 int main()
 {
-    int nbSkipList = 100, nbInsertion = 1000, i, j, perf1, perf2;
+    ABR a = ABR();
+    cout << "Affichage de l'arbre vide" << endl;
+    a.show_infix();
 
-    std::vector<SkipList*> lists;
+    a.add(25);
+    a.add(12);
+    a.add(32);
+    a.add(4);
+    a.add(23);
+    a.add(27);
 
-    for (i = 0; i < nbSkipList; i++)
-    {
-        lists.push_back(new SkipList);
-    }
+    a.show_prefix();
+    a.show_infix();
+    a.show_postfix();
+    cout << endl;
+    a.show();
 
-    std::chrono::time_point<std::chrono::system_clock> start, end;
-    
-    // perf1 : insertion des valeurs
-    start = std::chrono::system_clock::now();
-    for (std::vector<SkipList*>::iterator it = lists.begin() ; it != lists.end(); ++it)
-        for (j = 0; j < nbInsertion; j++)
-            (*it)->ajout(rand()%1000);
-    end = std::chrono::system_clock::now();
-    perf1 = std::chrono::duration_cast<std::chrono::microseconds>(end - start).count();
+    cout << "Affichage du sous-arbre sur 12" << endl;
+    a.get(12)->show(0);
 
-    std::cout << "Temps d'insertion moyen : " << perf1 << "ms" << std::endl;
+    cout << "Affichage de a2" << endl;
+    ABR a2 = ABR(a);
+    a2.show();
+
+    cout << "Affichage de a3" << endl;
+    ABR a3 = a;
+    a3.show();
+
+    a.vide();
+    cout << "Affichage après avoir vidé l'arbre" << endl;
+    a.show_infix();
+    cout << "Affichage de a2" << endl;
+    a2.show();
+    cout << "Affichage de a3" << endl;
+    a3.show();
 
     return 0;
 }

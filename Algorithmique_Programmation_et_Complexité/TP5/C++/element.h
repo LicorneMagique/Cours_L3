@@ -1,3 +1,7 @@
+/**
+ * Réalisé par Julien GIRAUD - 2019
+ */
+
 #ifndef _ELEMENT
 #define _ELEMENT
 
