@@ -2,18 +2,17 @@
  * Réalisé par Julien GIRAUD - 2019
  */
 
-#ifndef _ABR
-#define _ABR
+#ifndef _AVL
+#define _AVL
 
 #include "element.h"
 
 class Node
 {
-    friend class ABR;
+    friend class AVL;
     public:
         Node(Elem);
         Node(const Node*);
-        Node* get(Elem);
         bool operator<(const Node &);
         void add(Elem);
         void vide();
@@ -24,26 +23,22 @@ class Node
         void show_prefix();
         void show_postfix();
         
-        // Surcharge d'opérateur
-        //Node &operator=(const Node &);
-        
     private :
         Elem elem;
         Node* fg;
         Node* fd;
 };
 
-class ABR
+class AVL
 {
     public :
         // Constructeurs ---- Destructeur
-        ABR(); // Constructeur par défaut
-        ABR(const ABR *); // Constructeur par copie
-        ~ABR();
+        AVL(); // Constructeur par défaut
+        AVL(const AVL&); // Constructeur par copie
+        ~AVL();
 
         // Fonctions de manipulation de l'arbre
         bool search(Elem);
-        Node* get(Elem);
         void add(Elem);
         void vide();
 
@@ -54,7 +49,7 @@ class ABR
         void show_postfix();
         
         // Surcharge d'opérateur
-        ABR& operator=(const ABR &);
+        AVL& operator=(const AVL &);
 
     private :
         Node * racine;

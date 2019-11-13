@@ -1,29 +1,20 @@
-main : main.o abr.o element.o
-	g++ -o main main.o abr.o element.o
+main : main.o table.o
+	g++ -o main main.o table.o
 	echo main > .gitignore
 	echo main.o >> .gitignore
-	echo abr.o >> .gitignore
-	echo element.o >> .gitignore
-element.o : element.cpp
-	g++ -c element.cpp
+	echo table.o >> .gitignore
+element.o : table.cpp
+	g++ -c table.cpp
 	echo main > .gitignore
 	echo main.o >> .gitignore
-	echo abr.o >> .gitignore
-	echo element.o >> .gitignore
-abr.o : abr.cpp
-	g++ -c abr.cpp -std=c++0x
-	echo main > .gitignore
-	echo main.o >> .gitignore
-	echo abr.o >> .gitignore
-	echo element.o >> .gitignore
+	echo table.o >> .gitignore
 main.o : main.cpp
 	g++ -c main.cpp
 	echo main > .gitignore
 	echo main.o >> .gitignore
-	echo abr.o >> .gitignore
-	echo element.o >> .gitignore
+	echo table.o >> .gitignore
 run :
 	./main
 
 clean :
-	rm main main.o abr.o element.o
+	rm main .gitignore *.o *.txt

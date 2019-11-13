@@ -1,4 +1,4 @@
 main
 main.o
-skiplist.o
+avl.o
 element.o

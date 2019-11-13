@@ -1,4 +1,3 @@
 main
 main.o
-abr.o
-element.o
+table.o
