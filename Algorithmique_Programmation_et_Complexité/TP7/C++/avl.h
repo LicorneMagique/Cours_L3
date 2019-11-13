@@ -13,9 +13,18 @@ class Node
     public:
         Node(Elem);
         Node(const Node*);
-        bool operator<(const Node &);
+        bool operator<(const Node&);
+        int getHeight();
+        int getDifference();
         void add(Elem);
+        void equilibre();
         void vide();
+
+        // Rotations
+        void rotationDroite();
+        void rotationGauche();
+        void rotationDoubleDroite();
+        void rotationDoubleGauche();
 
         // Affichage
         void show(int);
@@ -25,6 +34,7 @@ class Node
         
     private :
         Elem elem;
+        int hauteur;
         Node* fg;
         Node* fd;
 };
@@ -39,6 +49,7 @@ class AVL
 
         // Fonctions de manipulation de l'arbre
         bool search(Elem);
+        int getHeight();
         void add(Elem);
         void vide();
 

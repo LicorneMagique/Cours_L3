@@ -48,6 +48,13 @@ int main()
     a2.vide();
     cout << "Affichage de a3" << endl;
     a3.show();
+    a3.vide();
+
+    for (int i = 0; i < 8; i++)
+        a3.add(rand()%100);
+    
+    cout << "Affichage de a3 après insertions" << endl;
+    a3.show();
 
     return 0;
 }

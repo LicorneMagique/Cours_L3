@@ -11,6 +11,7 @@ using namespace std;
 Node::Node(Elem e)
 {
     elem = e;
+    hauteur = 0;
     fd = nullptr;
     fg = nullptr;
 }
@@ -18,6 +19,7 @@ Node::Node(Elem e)
 Node::Node(const Node* n)
 {
     elem = n->elem;
+    hauteur = n->hauteur;
     fg = (n->fg != nullptr) ? new Node(n->fg) : nullptr;
     fd = (n->fd != nullptr) ? new Node(n->fd) : nullptr;
 }
@@ -64,15 +66,26 @@ void AVL::add(const Elem e)
 void Node::add(Elem e)
 {
     if (e < elem) // Si je dois mettre "e" à gauche
+    {
         if (fg == nullptr)
             fg = new Node(e);
         else
+        {
             fg->add(e);
+            fg->equilibre();
+        }
+    }
     else
+    {
         if (fd == nullptr)
             fd = new Node(e);
         else
+        {
             fd->add(e);
+            fd->equilibre();
+        }
+    }
+    hauteur = getHeight();
 }
 
 void AVL::show()
@@ -83,10 +96,10 @@ void AVL::show()
 
 void Node::show(int n)
 {
-    if (fg != nullptr) fg->show(n+1);
-    for (int i = 0; i < n; i++) cout << "   ";
-    cout << elem << endl;
     if (fd != nullptr) fd->show(n+1);
+    for (int i = 0; i < n; i++) cout << "        ";
+    cout << elem << "," << hauteur << endl;
+    if (fg != nullptr) fg->show(n+1);
 }
 
 void AVL::show_prefix()
@@ -139,4 +152,70 @@ void Node::vide()
     if (fg != nullptr) fg->vide();
     if (fd != nullptr) fd->vide();
     delete this;
+}
+
+int Node::getHeight() {
+    int h = 0;
+    if (this != NULL)
+        h = max(fg->getHeight() + 1, fd->getHeight() + 1);
+    return h;
+}
+
+void Node::equilibre()
+{
+    int bal_factor = getDifference();
+    if (bal_factor > 1) {
+        if (fg->getDifference() > 0)
+            rotationDoubleGauche();
+        else
+            rotationGauche();
+    }
+    else if (bal_factor < -1)
+    {
+        if (fd->getDifference() > 0)
+            rotationDroite();
+        else
+            rotationDoubleDroite();
+    }
+}
+
+void Node::rotationDroite()
+{
+    Node *n;
+    n = fd;
+    fd->rotationDoubleGauche();
+    //cout<<"Right-Left Rotation";
+    rotationDoubleDroite();
+}
+
+void Node::rotationGauche()
+{
+    Node *n;
+    n = fg;
+    fg->rotationDoubleDroite();
+    //cout<<"Left-Right Rotation";
+    rotationDoubleGauche();
+}
+
+void Node::rotationDoubleDroite()
+{
+    Node *n;
+    n = fg;
+    fd = n->fg;
+    n->fg = this;
+    //cout<<"Right-Right Rotation"; rr_rotat
+}
+
+void Node::rotationDoubleGauche()
+{
+    Node *n;
+    n = fg;
+    fg = n->fd;
+    n->fd = this;
+    //cout<<"Left-Left Rotation"; ll_rotat
+}
+
+int Node::getDifference()
+{
+    return fg->getHeight() - fd->getHeight();
 }
