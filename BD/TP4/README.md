@@ -19,7 +19,7 @@ Le principe d’une bibliothèque coopérative est de permettre de collectiviser
     create table Livre (
         id_ISBN integer primary key,
         id_preteur integer,
-        date_pret date,
+        date_pret timestamp,
         titre varchar(50),
         type varchar(50),
         nb_page integer,
@@ -29,9 +29,9 @@ Le principe d’une bibliothèque coopérative est de permettre de collectiviser
 
     create table Emprunt (
         id_p integer,
-        date_emprunt date,
+        date_emprunt timestamp,
         id_ISBN integer,
-        date_retour date,
+        date_retour timestamp,
         constraint pk_emprunt primary key (id_p, date_emprunt),
         foreign key (id_p) references Personne (id_p),
         foreign key (id_ISBN) references Livre (id_ISBN)
@@ -42,22 +42,22 @@ Le principe d’une bibliothèque coopérative est de permettre de collectiviser
 2. Peuplez la base de donnée avec un jeu petit d’essai comprenant un maximum de cas limites (e.g., livre non-emprunté, personne sans emprunt, emprunteur de son propre livre).
 
     ```sql
-    -- id_p, nom, prenom, adresse
+        -- id_p, nom, prenom, adresse
     insert into personne values (1, 'Lambert',  'Michel', '3 rue des Fleurs');
     insert into personne values (2, 'Lasalle',  'Pierre', '4 rue des Cerises');
     insert into personne values (3, 'Casanova', 'Alfred', '5 avenue du Lac');
     insert into personne values (4, 'Gourdin',  'Paul',   '6 boulevard des Sapins');
 
     -- id_preteur, date_pret, id_ISBN, titre, type, nb_page
-    insert into livre values (1, 1, '2019-11-14', 'La Bible', 'Type par défaut', 2547);
-    insert into livre values (2, 1, '2019-11-15', 'Le Renard', 'Image', 85);
-    insert into livre values (3, 2, '2019-11-09', 'Les chats', 'Roman', 375);
-    insert into livre values (4, 2, '2019-11-10', 'Le C++ pour les nuls', 'Documentation', 1421);
+    insert into livre values (1, 1, '2019-11-14 16:34:00', 'La Bible', 'Type par défaut', 2547);
+    insert into livre values (2, 1, '2019-11-15 12:38:00', 'Le Renard', 'Image', 85);
+    insert into livre values (3, 2, '2019-11-09 14:24:00', 'Les chats', 'Roman', 375);
+    insert into livre values (4, 2, '2019-11-10 17:52:00', 'Le C++ pour les nuls', 'Documentation', 1421);
 
-    -- id_p, date_emprunt, id_ISBN, date_retour
-    insert into emprunt values (1, '2019-12-01', 1, '2019-12-03');
-    insert into emprunt values (1, '2019-12-02', 2, '2019-12-04');
-    insert into emprunt values (3, '2019-12-01', 2);
+    -- id_p, date_emprunt, id_ISBN
+    insert into emprunt values (1, '2019-12-01 12:31:00', 1);
+    insert into emprunt values (1, '2019-12-01 11:22:00', 2);
+    insert into emprunt values (3, '2019-12-01 15:42:00', 2);
 
     ```
 
@@ -65,6 +65,17 @@ Le principe d’une bibliothèque coopérative est de permettre de collectiviser
 
     ```sql
     --trigger sur l'ajout dans la table emprunt, qui verifie si l'emprunteur est un preteur
+    create or replace function check_emprunteur(parametres a ajouter) returns trigger as $emprunt$
+    begin
+        if id_p note in (select distinct id_preteur from livre) then -- il faut mettre le resultat de la requette dans une variable
+            -- raise truc error
+        --end;
+        return new;
+    end;
+    $emprunt$ LANGUAGE plpgsql;
+
+    create trigger check_emprunteur before insert on emprunt -- changer par 
+    execute procedure check_emprunteur();
     ```
 
 4. La règle de gestion est que pour le dépôt d’un livre, on reçoit 4 crédits d’emprunts. Un crédit est retiré à chaque emprunt. Pour aider à la gestion, un attribut calculée Credits est ajouté à la relation PERSONNE . Implantez les déclencheurs en insertion nécessaires pour automatiser la maintenance du nombre de crédits. On assurera en particulier la règle métier suivante : « une personne ne peut pas effectuer d’emprunt si elle ne possède pas les crédits suffisants, sauf si le livre est à elle ».
