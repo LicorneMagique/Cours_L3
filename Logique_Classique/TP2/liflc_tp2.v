@@ -79,14 +79,33 @@ Definition comp_alphabet (x : Alphabet) (y : Alphabet) : bool :=
     end
   end.
 
-Theorem comp_alphabet_ssi : forall (x:Alphabet) (y:Alphabet), (comp_alphabet x y) = true -> x = y.
+(* Le ssi veut dire "si A alors B" ET "si B alors A" *)
+(* D'où le prédicat :
+"(comp_alphabet x y = true -> x = y)" si A alors B
+" /\ " et
+"(x = y -> comp_alphabet x y = true)" si B alors A *)
+Theorem comp_alphabet_ssi : forall (x:Alphabet) (y:Alphabet), (comp_alphabet x y = true -> x = y) /\ (x = y -> comp_alphabet x y = true).
 Proof.
 intro x.
 intro y.
-intro xy.
+split. (*On veut montrer deux formules donc on les sépare*)
+- intro x2. (*On précise qu'on gère le premier cas*)
+  destruct x, y. (*On remplace les variables par toutes leurs valeurs possibles*)
+  + reflexivity.
+  + simpl in x2. (*On remplace "comp_alphabet a b" par sa valeur*)
+    exfalso.
+    discriminate.
+  + simpl in x2.
+    discriminate.
+  + reflexivity.
+- intro x2.
+  rewrite x2.
+  destruct y.
+  + simpl.
+    reflexivity.
+  + simpl.
+    reflexivity.
 Qed.
-
-forall (x:nat) (l:nlist)
 
 (* on rappelle la fonction de comparaison sur les option nat codée en LIFLF *)
 Definition comp_option_nat (x y: option nat) : bool :=
@@ -95,7 +114,6 @@ match x with
   | None => match y with | None => true | Some toto => false end
   | Some n => match y with | Some m => Nat.eqb n m | None => false end
 end.
-
 
 (* Montrer que (comp_option_nat x y) retourne true SEULEMENT SI x=y. 
    on utilisera le théorème 
@@ -106,8 +124,20 @@ end.
    ATTENTION : Nat.eqb e1 e2 s'écrit aussi e1 =? e2
 
 *)
-Theorem comp_option_nat_seulement_si : False (* remplacez False *).
+
+Theorem comp_option_nat_seulement_si : forall (x:option nat) (y:option nat), (comp_option_nat x y = true -> x = y).
 Proof.
+intros.
+destruct x, y.
+- pose (beq_nat_true n n0).
+  apply e in H.
+  rewrite H.
+  reflexivity.
+- simpl in H.
+  discriminate.
+- simpl in H.
+  discriminate.
+- reflexivity.
 Admitted.
 
 
