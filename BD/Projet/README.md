@@ -4,7 +4,7 @@
 
 Nous avons rassemblé toutes les données dans un seul fichier CSV. Le code permettant de créer la table est le suivant :
 
-```postgresql
+```sql
 -- Création de la base
 drop table if exists "election-csv";
 CREATE TABLE "election-csv" (
@@ -81,7 +81,7 @@ Ce model passe les formes normales 1, 2, 3 si on considère que les pourcentages
 
 ## Question 5 - Création et remplissage des tables
 
-```postgresql
+```sql
 -- Table "Département"
 drop table if exists departement;
 create table departement (
