@@ -13,7 +13,7 @@ CREATE TABLE "election-csv" (
     "Code de la circonscription" DECIMAL NOT NULL,
     "Circonscription" VARCHAR(25) NOT NULL,
     "Code de la commune" DECIMAL NOT NULL,
-    "Commune" VARCHAR(133) NOT NULL,
+    "Commune" VARCHAR(40) NOT NULL,
     "Bureau de vote" DECIMAL NOT NULL,
     "Inscrits" DECIMAL NOT NULL,
     "Abstentions" DECIMAL NOT NULL,
@@ -41,7 +41,7 @@ CREATE TABLE "election-csv" (
     "Nom Bureau Vote" VARCHAR(170),
     "Adresse" VARCHAR(148),
     "Code Postal" DECIMAL,
-    "Ville" VARCHAR(133),
+    "Ville" VARCHAR(40),
     uniq_bdv VARCHAR(185)
 );
 ```
