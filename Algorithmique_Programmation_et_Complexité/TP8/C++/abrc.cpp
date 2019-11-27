@@ -46,7 +46,7 @@ ABRC &ABRC::operator=(const ABRC &a)
     if (this == &a) return *this;
 
     ABRC abrc(a);
-    
+
     return abrc;
 }
 
@@ -154,7 +154,7 @@ void Node::transform_en_ABRC(Node* prec)
     if (fd == nullptr)
     {
         cout << elem << ", " << fd << ", " << prec << endl;
-        fd = prec; // fait planter le code...
+        //fd = prec; // fait planter le code...
         cousu = true;
     }
     if (fd != nullptr && !fd->cousu) fd->transform_en_ABRC(prec);
