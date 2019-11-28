@@ -122,18 +122,85 @@ insert into candidat (
 -- Table "Commune"
 drop table if exists commune;
 create table commune (
-    code_insee decimal primary key,
+    code_commune decimal,
     code_departement decimal references departement(code),
-    code_commune decimal not null,
+    code_bureau decimal references bureau(code_bureau),
+    code_insee decimal,
     commune varchar(40) not null,
     code_postal decimal,
-    ville varchar(40)
+    ville varchar(40),
+    constraint pk_commune primary key (code_commune, code_departement, code_bureau)
 );
 insert into commune (
-    select distinct "Code Insee", "Code du département", "Code de la commune", "Commune", "Code Postal", "Ville"
-    from "election-csv" where "Code Postal" <> 0 and "Ville" <> ''
+    select distinct "Code de la commune", "Code du département", "Bureau de vote", "Code Insee", "Commune", "Code Postal", "Ville"
+    from "election-csv2" where "Code Postal" <> 0 and "Ville" <> ''
 );
 
+-- Table "Code Postal"
+drop table if exists commune;
+create table commune (
+    code_commune decimal,
+    code_departement decimal references departement(code),
+    code_bureau decimal references bureau(code_bureau),
+    code_insee decimal,
+    commune varchar(40) not null,
+    code_postal decimal,
+    ville varchar(40),
+    constraint pk_commune primary key (code_commune, code_departement, code_bureau)
+);
+insert into commune (
+    select distinct "Code de la commune", "Code du département", "Bureau de vote", "Code Insee", "Commune", "Code Postal", "Ville"
+    from "election-csv2" where "Code Postal" <> 0 and "Ville" <> ''
+);
+
+-- Table "Ville"
+drop table if exists commune;
+create table commune (
+    code_commune decimal,
+    code_departement decimal references departement(code),
+    code_bureau decimal references bureau(code_bureau),
+    code_insee decimal,
+    commune varchar(40) not null,
+    code_postal decimal,
+    ville varchar(40),
+    constraint pk_commune primary key (code_commune, code_departement, code_bureau)
+);
+insert into commune (
+    select distinct "Code de la commune", "Code du département", "Bureau de vote", "Code Insee", "Commune", "Code Postal", "Ville"
+    from "election-csv2" where "Code Postal" <> 0 and "Ville" <> ''
+);
+
+-- Table "Bureau"
+drop table if exists bureau;
+create table bureau (
+    code_insee decimal references commune(code_insee),
+    code_bureau decimal not null,
+    nom_bureau varchar(170),
+    code_departement decimal references departement(code),
+    code_circonscription decimal references circonscription(code),
+    coordonnees varchar(120),
+    adresse varchar(150),
+    uniq_bdv varchar(185),
+    inscrits decimal not null,
+    abstentions decimal not null,
+    "% abs/ins" decimal not null,
+    votants decimal not null,
+    "% vot/ins" decimal not null,
+    blancs decimal not null,
+    "% clancs/ins" decimal not null,
+    "% clancs/vot" decimal not null,
+    nuls decimal not null,
+    "% nuls/ins" decimal not null,
+    "% nuls/vot" decimal not null,
+    exprimes decimal not null,
+    "% exp/ins" decimal not null,
+    "% exp/vot" decimal not null,
+    constraint pk_bureau primary key (code_insee, bureau, nom_bureau)
+);
+insert into bureau (
+    select distinct "Code Insee", "Bureau de vote", "Nom Bureau Vote", "Code du département", "Code de la circonscription", "Coordonnées", "Adresse", "uniq_bdv", "Inscrits", "Abstentions", "% Abs/Ins", "Votants", "% Vot/Ins", "Blancs", "% Blancs/Ins", "% Blancs/Vot", "Nuls", "% Nuls/Ins", "% Nuls/Vot", "Exprimés", "% Exp/Ins", "% Exp/Vot"
+    from "election-csv";
+);
 
 Bureau(_#Code Insee, _Bureau de vote, _Nom Bureau Vote, #Code du département, #Code de la circonscription, Coordonnées, Adresse, uniq_bdv, Inscrits, Abstentions, % Abs/Ins, Votants, % Vot/Ins, Blancs, % Blancs/Ins, % Blancs/Vot, Nuls, % Nuls/Ins, % Nuls/Vot, Exprimés, % Exp/Ins, % Exp/Vot)
 ScoreCandidat(_#Code Insee, _#Bureau de vote, _#Nom Bureau Vote, _#N°Panneau, Voix, % Voix/Ins, % Voix/Exp)
