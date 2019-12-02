@@ -14,10 +14,10 @@ Require Import Arith.
 (**********************************************************************)
 
 
-(*On rappelle que les objets de type nat sont définis inductivement de façon similaire à *)
+(*On rappelle que les objets de type nat sont définis inductivement de façon similaire à
 Inductive entiers : Set :=
   | O : entiers
-  | S : entiers -> entiers.
+  | S : entiers -> entiers. *)
 Print nat.
 
 (* On dispose donc d'un principe d'induction nat_ind, construit à peu près comme vu en cours *)
@@ -138,7 +138,7 @@ destruct x, y.
 - simpl in H.
   discriminate.
 - reflexivity.
-Admitted.
+Qed.
 
 
 (******************************************************************************)
@@ -151,7 +151,10 @@ Admitted.
    donc pas de problème ici, c'est juste un calcul (simpl) *)
 Lemma plus_Z_l : forall (x : nat), plus 0 x = x.
 Proof.
-Admitted.
+intros.
+simpl.
+reflexivity.
+Qed.
 
 (* Exercice : montrer que la fonction plus appliquée un x quelconque
    et 0 retourne x. *)
@@ -159,7 +162,13 @@ Admitted.
 (* on utilise "induction x" qui invoque la règle nat_ind. *)
 Lemma plus_Z_r : forall x, plus x 0 = x.
 Proof.
-Admitted.
+intros.
+induction x.
+- reflexivity.
+- simpl.
+  rewrite IHx.
+  reflexivity.
+Qed.
 
 
 (******************************************************************************)
@@ -169,8 +178,11 @@ Admitted.
 
 (* Exercice : définir "concat" la fonction de concaténation de deux
    listes l1 et l2 (par récursion sur l1) *)
-Fixpoint concat (l1 l2 : nlist) : nlist := 
-  []. (* Remplacez [] *)
+Fixpoint concat (l1 l2 : nlist) : nlist :=
+match l1 with
+  | [] => l2
+  | x::l => x :: concat l l2
+end.
 
 
 (* On note ++ en notation infix pour la concatenation *)
@@ -179,24 +191,44 @@ Infix "++" := concat.
 (* VU EN COURS : fonction de longueur des listes      *)
 Fixpoint length (l : nlist) : nat :=
   match l with
-  | []     => 0 
+  | [] => 0
   | x :: l => S(length l) 
-  end.
+end.
 
 (* Exercice : montrer que la fonction retourne 0 SEULEMENT SI la liste
    est vide *)
-Lemma length_zero_seulement_si_vide : False. (* remplacer False *)
+Lemma length_zero_seulement_si_vide : forall l, length l = 0 -> l = [].
 Proof.
-Admitted.                                  
+intros.
+induction l.
+- reflexivity.
+- induction IHl.
+  + discriminate.
+  + discriminate.
+Qed.
 
 
 
 (* Exercice : montrer que la fonction appliquée à la concaténation de
 deux listes quelconques l1 l2 retourne la somme des applications de
 cette fonction à chacune des deux listes.*)
-Lemma length_of_concat : False. (* remplacer False *)
+Lemma length_of_concat : forall (l1:nlist) (l2:nlist), plus (length l1) (length l2) = length (concat l1 l2).
 Proof.
-Admitted.
+intros.
+induction l1, l2.
+- simpl.
+  reflexivity.
+- simpl.
+  reflexivity.
+- simpl.
+  induction IHl1.
+  simpl.
+  reflexivity.
+- simpl.
+  induction IHl1.
+  simpl.
+  reflexivity.
+Qed.
 
 
 

@@ -9,9 +9,9 @@ Nous avons rassemblé toutes les données dans un seul fichier CSV. Le code perm
 drop table if exists "election-csv";
 CREATE TABLE "election-csv" (
     "Code du département" DECIMAL NOT NULL,
-    "Département" VARCHAR(12) NOT NULL,
+    "Département" VARCHAR(20) NOT NULL,
     "Code de la circonscription" DECIMAL NOT NULL,
-    "Circonscription" VARCHAR(25) NOT NULL,
+    "Circonscription" VARCHAR(30) NOT NULL,
     "Code de la commune" DECIMAL NOT NULL,
     "Commune" VARCHAR(40) NOT NULL,
     "Bureau de vote" DECIMAL NOT NULL,
@@ -31,20 +31,20 @@ CREATE TABLE "election-csv" (
     "% Exp/Vot" DECIMAL NOT NULL,
     "N°Panneau" DECIMAL NOT NULL,
     "Sexe" VARCHAR(1) NOT NULL,
-    "Nom" VARCHAR(16) NOT NULL,
-    "Prénom" VARCHAR(8) NOT NULL,
+    "Nom" VARCHAR(20) NOT NULL,
+    "Prénom" VARCHAR(10) NOT NULL,
     "Voix" DECIMAL NOT NULL,
     "% Voix/Ins" DECIMAL NOT NULL,
     "% Voix/Exp" DECIMAL NOT NULL,
     "Code Insee" DECIMAL NOT NULL,
-    "Coordonnées" VARCHAR(119),
-    "Nom Bureau Vote" VARCHAR(170),
-    "Adresse" VARCHAR(148),
+    "Coordonnées" VARCHAR(20),
+    "Nom Bureau Vote" VARCHAR(120),
+    "Adresse" VARCHAR(60),
     "Code Postal" DECIMAL,
     "Ville" VARCHAR(40),
-    uniq_bdv VARCHAR(185)
+    uniq_bdv VARCHAR(130)
 );
-copy "election-csv2" from '/home/julien/Téléchargements/Projet-BD/test/data.csv' delimiter ';' csv header;
+copy "election-csv" from '/home/julien/Téléchargements/Projet-BD/test/data.csv' delimiter ';' csv header;
 ```
 
 ## Question 3
@@ -56,12 +56,11 @@ Nous avons trouvé les DF suivantes :
     "Code du département" -> "Département"
     "Département" -> "Code du département"
     "Code de la circonscription" -> "Circonscription"
-    "Circonscription" -> "Code de la circonscription"
     "Code du département", "Code de la commune" -> "Commune", "Code Insee"
     "Code du département", "Code de la commune", "Bureau de vote" -> "Code Postal", "Ville"
-    "Code du département", "Code de la commune", "Bureau de vote", "Nom Bureau Vote" -> "Code du département", "Code de la circonscription", "Coordonnées", "Adresse", "uniq_bdv", "Inscrits", "Abstentions", "% Abs/Ins", "Votants", "% Vot/Ins", "Blancs", "% Blancs/Ins", "% Blancs/Vot", "Nuls", "% Nuls/Ins", "% Nuls/Vot", "Exprimés", "% Exp/Ins", "% Exp/Vot"
+    "Code du département", "Code de la commune", "Bureau de vote", "Nom Bureau vote", "Adresse" -> "Code du département", "Code de la commune", "Bureau de vote", "Nom Bureau de vote", "Coordonnées", "Adresse", "Code de la circonscription", "uniq_bdv", "Inscrits", "Abstentions", "% Abs/Ins", "Votants", "% Vot/Ins", "Blancs", "% Blancs/Ins", "% Blancs/Vot", "Nuls", "% Nuls/Ins", "% Nuls/Vot", "Exprimés", "% Exp/Ins", "% Exp/Vot"
     "N°Panneau" -> "Sexe", "Nom", "Prénom"
-    "N°Panneau", "Code Insee", "Bureau de vote", "Nom Bureau Vote" -> "Voix", "% Voix/Ins", "% Voix/Exp"
+    "N°Panneau", "Code du département", "Code de la commune", "Bureau de vote", "Nom Bureau Vote" -> "Voix", "% Voix/Ins", "% Voix/Exp"
 }
 ```
 
@@ -74,8 +73,8 @@ Candidat(_N°Panneau, Sexe, Nom, Prénom)
 Departement(_Code du département, Département)
 Circonscription(_Code de la circonscription, Circonscription)
 Commune(_#Code du département, _Code de la commune, Code Insee, Commune)
-Complement_Commune(_#Code du département, _#Code de la commune, Code Postal, Ville)
-Bureau(_#Code du département, _#Code de la commune, _Bureau de vote, _Nom Bureau Vote, _Adresse, #Code du département, #Code de la circonscription, Coordonnées, uniq_bdv, Inscrits, Abstentions, % Abs/Ins, Votants, % Vot/Ins, Blancs, % Blancs/Ins, % Blancs/Vot, Nuls, % Nuls/Ins, % Nuls/Vot, Exprimés, % Exp/Ins, % Exp/Vot)
+Complement_Commune(_#Code du département, _#Code de la commune, _Bureau de vote, Code Postal, Ville)
+Bureau(_#Code du département, _#Code de la commune, _#Bureau de vote, _Nom Bureau Vote, _Adresse, #Code de la circonscription, Coordonnées, uniq_bdv, Inscrits, Abstentions, % Abs/Ins, Votants, % Vot/Ins, Blancs, % Blancs/Ins, % Blancs/Vot, Nuls, % Nuls/Ins, % Nuls/Vot, Exprimés, % Exp/Ins, % Exp/Vot)
 ScoreCandidat(_#Code du département, _#Code de la commune, _#Bureau de vote, _#Nom Bureau Vote, _#N°Panneau, Voix, % Voix/Ins, % Voix/Exp)
 ```
 
@@ -84,11 +83,22 @@ Ce model passe les formes normales 1, 2, 3 si on considère que les pourcentages
 ## Question 5 - Création et remplissage des tables
 
 ```sql
+-- #### Nettoyage du projet ####
+do $$ begin
+    drop table if exists score;
+    drop table if exists bureau;
+    drop table if exists complement_commune;
+    drop table if exists commune;
+    drop table if exists candidat;
+    drop table if exists circonscription;
+    drop table if exists departement;
+end $$;
+
 -- Table "Département"
 drop table if exists departement;
 create table departement (
     code decimal primary key,
-    "label" varchar(12) not null
+    "label" varchar(20) not null
 );
 insert into departement (
     select distinct "Code du département", "Département"
@@ -99,7 +109,7 @@ insert into departement (
 drop table if exists circonscription;
 create table circonscription (
     code decimal primary key,
-    "label" varchar(25) not null
+    "label" varchar(30) not null
 );
 insert into circonscription (
     select distinct "Code de la circonscription", "Circonscription"
@@ -112,8 +122,8 @@ drop table if exists candidat;
 create table candidat (
     id decimal primary key,
     sexe varchar(1) not null,
-    nom varchar(16) not null,
-    prenom varchar(8) not null
+    nom varchar(20) not null,
+    prenom varchar(10) not null
 );
 insert into candidat (
     select distinct "N°Panneau", "Sexe", "Nom", "Prénom"
@@ -152,16 +162,18 @@ insert into complement_commune (
 );
 
 -- Table "Bureau"
+update "election-csv" set "Adresse" = '' where "Adresse" is null;
+update "election-csv" set "Nom Bureau Vote" = '' where "Nom Bureau Vote" is null;
 drop table if exists bureau;
 create table bureau (
     code_departement decimal,
     code_commune decimal,
     code_bureau decimal,
     nom_bureau varchar(170),
-    adresse varchar(150),
+    adresse varchar(60),
     code_circonscription decimal references circonscription(code),
-    coordonnees varchar(120),
-    uniq_bdv varchar(185),
+    coordonnees varchar(20),
+    uniq_bdv varchar(130),
     inscrits decimal not null,
     abstentions decimal not null,
     "% abs/ins" decimal not null,
@@ -190,7 +202,7 @@ create table score (
     code_departement decimal,
     code_commune decimal,
     code_bureau decimal,
-    nom_bureau varchar(170),
+    nom_bureau varchar(120),
     adresse varchar(150),
     id_candidat decimal references candidat(id),
     voix decimal,
@@ -204,6 +216,5 @@ insert into score (
     select distinct "Code du département", "Code de la commune", "Bureau de vote", "Nom Bureau Vote", "Adresse", "N°Panneau", "Voix", "% Voix/Ins", "% Voix/Exp"
     from "election-csv"
 );
-ScoreCandidat(_#Code du département, _#Code de la commune, _#Bureau de vote, _#Nom Bureau Vote, _#N°Panneau, Voix, % Voix/Ins, % Voix/Exp)
 
 ```
