@@ -51,16 +51,15 @@ copy "election-csv" from '/home/julien/Téléchargements/Projet-BD/test/data.csv
 
 Nous avons trouvé les DF suivantes :
 
-```php
+```sql
 {
     "Code du département" -> "Département"
     "Département" -> "Code du département"
     "Code de la circonscription" -> "Circonscription"
     "Code du département", "Code de la commune" -> "Commune", "Code Insee"
-    "Code du département", "Code de la commune", "Bureau de vote" -> "Code Postal", "Ville"
-    "Code du département", "Code de la commune", "Bureau de vote", "Nom Bureau vote", "Adresse" -> "Code du département", "Code de la commune", "Bureau de vote", "Nom Bureau de vote", "Coordonnées", "Adresse", "Code de la circonscription", "uniq_bdv", "Inscrits", "Abstentions", "% Abs/Ins", "Votants", "% Vot/Ins", "Blancs", "% Blancs/Ins", "% Blancs/Vot", "Nuls", "% Nuls/Ins", "% Nuls/Vot", "Exprimés", "% Exp/Ins", "% Exp/Vot"
+    "Code du département", "Code de la commune", "Bureau de vote", "Nom Bureau vote", "Adresse", "Ville" -> "Coordonnées", "Code Postal", "Ville", "Code de la circonscription", "uniq_bdv", "Inscrits", "Abstentions", "% Abs/Ins", "Votants", "% Vot/Ins", "Blancs", "% Blancs/Ins", "% Blancs/Vot", "Nuls", "% Nuls/Ins", "% Nuls/Vot", "Exprimés", "% Exp/Ins", "% Exp/Vot"
     "N°Panneau" -> "Sexe", "Nom", "Prénom"
-    "N°Panneau", "Code du département", "Code de la commune", "Bureau de vote", "Nom Bureau Vote" -> "Voix", "% Voix/Ins", "% Voix/Exp"
+    "N°Panneau", "Code du département", "Code de la commune", "Bureau de vote", "Nom Bureau vote", "Adresse", "Ville" -> "Voix", "% Voix/Ins", "% Voix/Exp"
 }
 ```
 
@@ -73,12 +72,11 @@ Candidat(_N°Panneau, Sexe, Nom, Prénom)
 Departement(_Code du département, Département)
 Circonscription(_Code de la circonscription, Circonscription)
 Commune(_#Code du département, _Code de la commune, Code Insee, Commune)
-Complement_Commune(_#Code du département, _#Code de la commune, _Bureau de vote, Code Postal, Ville)
-Bureau(_#Code du département, _#Code de la commune, _#Bureau de vote, _Nom Bureau Vote, _Adresse, #Code de la circonscription, Coordonnées, uniq_bdv, Inscrits, Abstentions, % Abs/Ins, Votants, % Vot/Ins, Blancs, % Blancs/Ins, % Blancs/Vot, Nuls, % Nuls/Ins, % Nuls/Vot, Exprimés, % Exp/Ins, % Exp/Vot)
-ScoreCandidat(_#Code du département, _#Code de la commune, _#Bureau de vote, _#Nom Bureau Vote, _#N°Panneau, Voix, % Voix/Ins, % Voix/Exp)
+Bureau(_#Code du département, _#Code de la commune, _#Bureau de vote, _Nom Bureau Vote, _Adresse, _Ville, Code Postal, #Code de la circonscription, Coordonnées, uniq_bdv, Inscrits, Abstentions, % Abs/Ins, Votants, % Vot/Ins, Blancs, % Blancs/Ins, % Blancs/Vot, Nuls, % Nuls/Ins, % Nuls/Vot, Exprimés, % Exp/Ins, % Exp/Vot)
+ScoreCandidat(_#Code du département, _#Code de la commune, _#Bureau de vote, _#Nom Bureau Vote, _#Adresse, _#Ville, _#N°Panneau, Voix, % Voix/Ins, % Voix/Exp)
 ```
 
-Ce model passe les formes normales 1, 2, 3 si on considère que les pourcentages doivent être stockés en base plutôt que d'être calculés lors des requettes (en l'absence de plus d'information on va supposer qu'il faut garder les résultats en base), FNBC
+Ce model passe les formes normales 1, 2, 3 si on enlève les pourcentages qui peuvent être calculés, FNBC
 
 ## Question 5 - Création et remplissage des tables
 
