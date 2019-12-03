@@ -96,7 +96,7 @@ end $$;
 drop table if exists departement;
 create table departement (
     code decimal primary key,
-    "label" varchar(20) not null
+    nom varchar(20) not null
 );
 insert into departement (
     select distinct "Code du département", "Département"
@@ -107,7 +107,7 @@ insert into departement (
 drop table if exists circonscription;
 create table circonscription (
     code decimal primary key,
-    "label" varchar(30) not null
+    nom varchar(30) not null
 );
 insert into circonscription (
     select distinct "Code de la circonscription", "Circonscription"
@@ -149,7 +149,7 @@ create table bureau (
     code_departement decimal,
     code_commune decimal,
     code_bureau decimal,
-    nom_bureau varchar(170),
+    nom_bureau varchar(120),
     ville varchar(40),
     code_postal decimal,
     code_circonscription decimal references circonscription(code),
@@ -190,4 +190,41 @@ insert into score (
     from "election-csv"
 );
 
+```
+
+## Question 6 - Affichage des scores
+
+```sql
+drop function if exists get_score(varchar, varchar);
+create or replace function get_score(n varchar, p varchar) returns table (
+    voix decimal,
+    "% voix/inscrits" decimal,
+    "% voix/exprimés" decimal,
+    bureau varchar(140),
+    commune varchar(40),
+    circonscription varchar(30),
+    departement varchar(20)
+    ) as $$
+    begin
+        return query
+        select s.voix, s.voix/inscrits, s.voix/nullif(exprimes, 0),
+        concat('Bureau ', s.code_bureau, nullif(concat(' - ', s.nom_bureau), ' - '))::varchar(140), co.commune, ci.nom, d.nom
+        from score s
+        join candidat ca on s.id_candidat = ca.id
+        join bureau b on s.code_departement = b.code_departement and s.code_commune = b.code_commune and s.code_bureau = b.code_bureau
+        join departement d on s.code_departement = d.code
+        join circonscription ci on b.code_circonscription = ci.code
+        join commune co on s.code_departement = co.code_departement and s.code_commune = co.code_commune
+        where ca.nom = n and ca.prenom = p
+        order by d.nom, ci.nom, co.commune, s.code_bureau;
+    end;
+$$ language plpgsql;
+
+-- Quelques exemples d'utilisation
+select * from get_score('LE PEN', 'Marine');
+select * from get_score('MACRON', 'Emmanuel');
+select * from get_score('MÉLENCHON', 'Jean-Luc');
+select avg(voix) from get_score('LE PEN', 'Marine');
+select avg(voix) from get_score('MACRON', 'Emmanuel');
+select avg(voix) from get_score('MÉLENCHON', 'Jean-Luc');
 ```
