@@ -71,9 +71,9 @@ Notre schéma entité/association en version relationnel est le suivant :
 Candidat(_N°Panneau, Sexe, Nom, Prénom)
 Departement(_Code du département, Département)
 Circonscription(_Code de la circonscription, Circonscription)
-Commune(_#Code du département, _Code de la commune, Code Insee, Commune)
-Bureau(_#Code du département, _#Code de la commune, _#Bureau de vote, _Nom Bureau Vote, _Adresse, _Ville, Code Postal, #Code de la circonscription, Coordonnées, uniq_bdv, Inscrits, Abstentions, % Abs/Ins, Votants, % Vot/Ins, Blancs, % Blancs/Ins, % Blancs/Vot, Nuls, % Nuls/Ins, % Nuls/Vot, Exprimés, % Exp/Ins, % Exp/Vot)
-ScoreCandidat(_#Code du département, _#Code de la commune, _#Bureau de vote, _#Nom Bureau Vote, _#Adresse, _#Ville, _#N°Panneau, Voix, % Voix/Ins, % Voix/Exp)
+Commune(_#Code du département, _Code de la commune, Commune)
+Bureau(_#Code du département, _#Code de la commune, _#Bureau de vote, _Nom Bureau Vote, Ville, Code Postal, #Code de la circonscription, Coordonnées, uniq_bdv, Inscrits, Abstentions, % Abs/Ins, Votants, % Vot/Ins, Blancs, % Blancs/Ins, % Blancs/Vot, Nuls, % Nuls/Ins, % Nuls/Vot, Exprimés, % Exp/Ins, % Exp/Vot)
+ScoreCandidat(_#Code du département, _#Code de la commune, _#Bureau de vote, _#Nom Bureau Vote, _#N°Panneau, Voix)
 ```
 
 Ce model passe les formes normales 1, 2, 3 si on enlève les pourcentages qui peuvent être calculés, FNBC
@@ -143,9 +143,7 @@ insert into commune (
 );
 
 -- Table "Bureau"
-update "election-csv" set "Adresse" = '' where "Adresse" is null;
 update "election-csv" set "Nom Bureau Vote" = '' where "Nom Bureau Vote" is null;
-update "election-csv" set "Ville" = '' where "Ville" is null;
 drop table if exists bureau;
 create table bureau (
     code_departement decimal,
@@ -153,7 +151,6 @@ create table bureau (
     code_bureau decimal,
     nom_bureau varchar(170),
     ville varchar(40),
-    adresse varchar(60),
     code_postal decimal,
     code_circonscription decimal references circonscription(code),
     coordonnees varchar(20),
@@ -165,11 +162,11 @@ create table bureau (
     nuls decimal not null,
     exprimes decimal not null,
     foreign key (code_departement, code_commune) references commune(code_departement, code_commune),
-    primary key (code_departement, code_commune, code_bureau, nom_bureau, ville, adresse)
+    primary key (code_departement, code_commune, code_bureau, nom_bureau)
 );
 insert into bureau (
     select distinct "Code du département", "Code de la commune", "Bureau de vote", "Nom Bureau Vote",
-    "Ville", "Adresse", "Code Postal", "Code de la circonscription", "Coordonnées", "uniq_bdv",
+    "Ville", "Code Postal", "Code de la circonscription", "Coordonnées", "uniq_bdv",
     "Inscrits", "Abstentions", "Votants", "Blancs", "Nuls", "Exprimés"
     from "election-csv"
 );
@@ -181,17 +178,15 @@ create table score (
     code_commune decimal,
     code_bureau decimal,
     nom_bureau varchar(120),
-    ville varchar(40),
-    adresse varchar(150),
     id_candidat decimal references candidat(id),
     voix decimal,
-    foreign key (code_departement, code_commune, code_bureau, nom_bureau, ville, adresse
-    ) references bureau(code_departement, code_commune, code_bureau, nom_bureau, ville, adresse),
-    primary key (code_departement, code_commune, code_bureau, nom_bureau, ville, adresse, id_candidat)
+    foreign key (code_departement, code_commune, code_bureau, nom_bureau
+    ) references bureau(code_departement, code_commune, code_bureau, nom_bureau),
+    primary key (code_departement, code_commune, code_bureau, nom_bureau, id_candidat)
 );
 insert into score (
-    select distinct "Code du département", "Code de la commune", "Bureau de vote",
-    "Nom Bureau Vote", "Ville", "Adresse", "N°Panneau", "Voix"
+    select distinct "Code du département", "Code de la commune",
+    "Bureau de vote", "Nom Bureau Vote", "N°Panneau", "Voix"
     from "election-csv"
 );
 
