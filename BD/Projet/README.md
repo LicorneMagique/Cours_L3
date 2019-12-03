@@ -136,63 +136,43 @@ drop table if exists commune;
 create table commune (
     code_departement decimal references departement(code),
     code_commune decimal,
-    code_insee decimal,
     commune varchar(40) not null,
-    constraint pk_commune primary key (code_departement, code_commune)
+    primary key (code_departement, code_commune)
 );
 insert into commune (
-    select distinct "Code du département", "Code de la commune", "Code Insee", "Commune"
+    select distinct "Code du département", "Code de la commune", "Commune"
     from "election-csv"
-);
-
--- Table "Complément Commune"
-drop table if exists complement_commune;
-create table complement_commune (
-    code_departement decimal,
-    code_commune decimal,
-    code_bureau decimal,
-    code_postal decimal,
-    ville varchar(40),
-    foreign key (code_departement, code_commune) references commune(code_departement, code_commune),
-    primary key (code_departement, code_commune, code_bureau)
-);
-insert into complement_commune (
-    select distinct "Code du département", "Code de la commune", "Bureau de vote", "Code Postal", "Ville"
-    from "election-csv" where "Ville" <> ''
 );
 
 -- Table "Bureau"
 update "election-csv" set "Adresse" = '' where "Adresse" is null;
 update "election-csv" set "Nom Bureau Vote" = '' where "Nom Bureau Vote" is null;
+update "election-csv" set "Ville" = '' where "Ville" is null;
 drop table if exists bureau;
 create table bureau (
     code_departement decimal,
     code_commune decimal,
     code_bureau decimal,
     nom_bureau varchar(170),
+    ville varchar(40),
     adresse varchar(60),
+    code_postal decimal,
     code_circonscription decimal references circonscription(code),
     coordonnees varchar(20),
     uniq_bdv varchar(130),
     inscrits decimal not null,
     abstentions decimal not null,
-    "% abs/ins" decimal not null,
     votants decimal not null,
-    "% vot/ins" decimal not null,
     blancs decimal not null,
-    "% clancs/ins" decimal not null,
-    "% clancs/vot" decimal not null,
     nuls decimal not null,
-    "% nuls/ins" decimal not null,
-    "% nuls/vot" decimal not null,
     exprimes decimal not null,
-    "% exp/ins" decimal not null,
-    "% exp/vot" decimal not null,
     foreign key (code_departement, code_commune) references commune(code_departement, code_commune),
-    primary key (code_departement, code_commune, code_bureau, nom_bureau, adresse)
+    primary key (code_departement, code_commune, code_bureau, nom_bureau, ville, adresse)
 );
 insert into bureau (
-    select distinct "Code du département", "Code de la commune", "Bureau de vote", "Nom Bureau Vote", "Adresse", "Code de la circonscription", "Coordonnées", "uniq_bdv", "Inscrits", "Abstentions", "% Abs/Ins", "Votants", "% Vot/Ins", "Blancs", "% Blancs/Ins", "% Blancs/Vot", "Nuls", "% Nuls/Ins", "% Nuls/Vot", "Exprimés", "% Exp/Ins", "% Exp/Vot"
+    select distinct "Code du département", "Code de la commune", "Bureau de vote", "Nom Bureau Vote",
+    "Ville", "Adresse", "Code Postal", "Code de la circonscription", "Coordonnées", "uniq_bdv",
+    "Inscrits", "Abstentions", "Votants", "Blancs", "Nuls", "Exprimés"
     from "election-csv"
 );
 
@@ -203,17 +183,17 @@ create table score (
     code_commune decimal,
     code_bureau decimal,
     nom_bureau varchar(120),
+    ville varchar(40),
     adresse varchar(150),
     id_candidat decimal references candidat(id),
     voix decimal,
-    "% voix/ins" decimal,
-    "% voix/exp" decimal,
-    foreign key (code_departement, code_commune, code_bureau, nom_bureau, adresse
-        ) references bureau(code_departement, code_commune, code_bureau, nom_bureau, adresse),
-    primary key (code_departement, code_commune, code_bureau, nom_bureau, adresse, id_candidat)
+    foreign key (code_departement, code_commune, code_bureau, nom_bureau, ville, adresse
+    ) references bureau(code_departement, code_commune, code_bureau, nom_bureau, ville, adresse),
+    primary key (code_departement, code_commune, code_bureau, nom_bureau, ville, adresse, id_candidat)
 );
 insert into score (
-    select distinct "Code du département", "Code de la commune", "Bureau de vote", "Nom Bureau Vote", "Adresse", "N°Panneau", "Voix", "% Voix/Ins", "% Voix/Exp"
+    select distinct "Code du département", "Code de la commune", "Bureau de vote",
+    "Nom Bureau Vote", "Ville", "Adresse", "N°Panneau", "Voix"
     from "election-csv"
 );
 
