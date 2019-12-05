@@ -82,7 +82,7 @@ Ce model passe les formes normales 1, 2, 3 si on enlève les pourcentages qui pe
 
 ```sql
 -- #### Nettoyage du projet ####
-do $$ begin
+do $nettoyage$ begin
     drop table if exists score;
     drop table if exists bureau;
     drop table if exists complement_commune;
@@ -90,7 +90,7 @@ do $$ begin
     drop table if exists candidat;
     drop table if exists circonscription;
     drop table if exists departement;
-end $$;
+end $nettoyage$;
 
 -- Table "Département"
 drop table if exists departement;
@@ -204,12 +204,17 @@ create or replace function get_score(n varchar, p varchar) returns table (
     bureau varchar(140),
     commune varchar(40),
     circonscription varchar(30),
-    departement varchar(20)
-    ) as $$
+    departement varchar(20),
+    code_bureau decimal,
+    nom_bureau varchar(120),
+    code_commune decimal,
+    code_departement decimal
+    ) as $get_score$
     begin
         return query
         select s.voix, s.voix/inscrits, s.voix/nullif(exprimes, 0), s.voix/nullif(votants, 0),
-        concat('Bureau ', s.code_bureau, nullif(concat(' - ', s.nom_bureau), ' - '))::varchar(140), co.commune, ci.nom, d.nom
+        concat('Bureau ', s.code_bureau, nullif(concat(' - ', s.nom_bureau), ' - '))::varchar(140),
+        co.commune, ci.nom, d.nom, s.code_bureau, s.nom_bureau, s.code_commune, s.code_departement
         from score s
         join candidat ca on s.id_candidat = ca.id
         join bureau b on s.code_departement = b.code_departement and s.code_commune = b.code_commune and s.code_bureau = b.code_bureau
@@ -219,7 +224,7 @@ create or replace function get_score(n varchar, p varchar) returns table (
         where ca.nom = n and ca.prenom = p
         order by d.nom, ci.nom, co.commune, s.code_bureau;
     end;
-$$ language plpgsql;
+$get_score$ language plpgsql;
 
 -- Quelques exemples d'utilisation
 select * from get_score('LE PEN', 'Marine');
