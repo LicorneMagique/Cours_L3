@@ -372,3 +372,11 @@ Par principe je ne fais pas de démonstrations sur les ensembles en BD
 2. )
 
     Il y a un problème de redondance
+
+## Projet
+
+- <https://fr.wikipedia.org/wiki/Similarit%C3%A9_cosinus>
+- <https://fr.wikipedia.org/wiki/Produit_scalaire>
+- <https://fr.wikipedia.org/wiki/Norme_(math%C3%A9matiques)>
+- <http://www.postgresqltutorial.com/plpgsql-loop-statements>
+- <https://www.postgresql.org/docs/9.6/functions-array.html>

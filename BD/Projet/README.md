@@ -57,9 +57,9 @@ Nous avons trouvé les DF suivantes :
     "Département" -> "Code du département"
     "Code de la circonscription" -> "Circonscription"
     "Code du département", "Code de la commune" -> "Commune", "Code Insee"
-    "Code du département", "Code de la commune", "Bureau de vote", "Nom Bureau vote", "Adresse", "Ville" -> "Coordonnées", "Code Postal", "Ville", "Code de la circonscription", "uniq_bdv", "Inscrits", "Abstentions", "% Abs/Ins", "Votants", "% Vot/Ins", "Blancs", "% Blancs/Ins", "% Blancs/Vot", "Nuls", "% Nuls/Ins", "% Nuls/Vot", "Exprimés", "% Exp/Ins", "% Exp/Vot"
+    "Code du département", "Code de la commune", "Bureau de vote", "Nom Bureau vote" -> "Coordonnées", "Code Postal", "Ville", "Code de la circonscription", "uniq_bdv", "Inscrits", "Abstentions", "% Abs/Ins", "Votants", "% Vot/Ins", "Blancs", "% Blancs/Ins", "% Blancs/Vot", "Nuls", "% Nuls/Ins", "% Nuls/Vot", "Exprimés", "% Exp/Ins", "% Exp/Vot"
     "N°Panneau" -> "Sexe", "Nom", "Prénom"
-    "N°Panneau", "Code du département", "Code de la commune", "Bureau de vote", "Nom Bureau vote", "Adresse", "Ville" -> "Voix", "% Voix/Ins", "% Voix/Exp"
+    "N°Panneau", "Code du département", "Code de la commune", "Bureau de vote", "Nom Bureau vote" -> "Voix", "% Voix/Ins", "% Voix/Exp"
 }
 ```
 
@@ -72,7 +72,7 @@ Candidat(_N°Panneau, Sexe, Nom, Prénom)
 Departement(_Code du département, Département)
 Circonscription(_Code de la circonscription, Circonscription)
 Commune(_#Code du département, _Code de la commune, Commune)
-Bureau(_#Code du département, _#Code de la commune, _#Bureau de vote, _Nom Bureau Vote, Ville, Code Postal, #Code de la circonscription, Coordonnées, uniq_bdv, Inscrits, Abstentions, % Abs/Ins, Votants, % Vot/Ins, Blancs, % Blancs/Ins, % Blancs/Vot, Nuls, % Nuls/Ins, % Nuls/Vot, Exprimés, % Exp/Ins, % Exp/Vot)
+Bureau(_#Code du département, _#Code de la commune, _#Bureau de vote, _Nom Bureau Vote, Ville, Code Postal, #Code de la circonscription, Coordonnées, uniq_bdv, Inscrits, Abstentions, Votants, Blancs, Nuls, Exprimés)
 ScoreCandidat(_#Code du département, _#Code de la commune, _#Bureau de vote, _#Nom Bureau Vote, _#N°Panneau, Voix)
 ```
 
@@ -200,6 +200,7 @@ create or replace function get_score(n varchar, p varchar) returns table (
     voix decimal,
     "% voix/inscrits" decimal,
     "% voix/exprimés" decimal,
+    "% voix/votants" decimal,
     bureau varchar(140),
     commune varchar(40),
     circonscription varchar(30),
@@ -207,7 +208,7 @@ create or replace function get_score(n varchar, p varchar) returns table (
     ) as $$
     begin
         return query
-        select s.voix, s.voix/inscrits, s.voix/nullif(exprimes, 0),
+        select s.voix, s.voix/inscrits, s.voix/nullif(exprimes, 0), s.voix/nullif(votants, 0),
         concat('Bureau ', s.code_bureau, nullif(concat(' - ', s.nom_bureau), ' - '))::varchar(140), co.commune, ci.nom, d.nom
         from score s
         join candidat ca on s.id_candidat = ca.id
