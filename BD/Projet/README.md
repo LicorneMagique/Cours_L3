@@ -234,3 +234,80 @@ select avg(voix) from get_score('LE PEN', 'Marine');
 select avg(voix) from get_score('MACRON', 'Emmanuel');
 select avg(voix) from get_score('MÉLENCHON', 'Jean-Luc');
 ```
+
+## Question 8 - Similarités entre départements
+
+```sql
+-- Type de la table du résultat de la fonction get_similarite()
+drop type if exists similarite;
+create type similarite as (
+    "Département 1" varchar(30),
+    "Département 2" varchar(30),
+    "Similarité" decimal,
+    debug varchar(200)
+);
+-- Type des couples de département
+drop type if exists similarite_data;
+create type similarite_data as (
+    d1 decimal, -- Code département 1
+    n1 varchar(30), -- Nom département 1
+    d2 decimal, -- Code département 1
+    n2 varchar(30) -- Nom département 1
+);
+drop function if exists get_similarite();
+create or replace function get_similarite() returns setof similarite as $get_similarite$
+    declare
+        ligne similarite_data;
+        sortie similarite;
+        i decimal; -- Pour les boucles
+        v1 integer array; -- Vecteur 1
+        v2 integer array; -- Vecteur 2
+        s integer; -- Pour requette de score
+    begin
+        i := 0;
+        -- Pour chaque couple de département
+        for ligne in (
+            select d1.code, d1.nom, d2.code, d2.nom
+            from departement d1, departement d2
+            where d1.code <> d2.code and d1.code < d2.code
+        ) loop
+            -- Récupération du nombre de voix de chaque candidat du département 1
+            v1 := '{}';
+            for s in (
+                select sum(voix)
+                from score
+                where code_departement = ligne.d1
+                group by id_candidat
+                order by id_candidat
+            ) loop
+                select array_append(v1, s) into v1; -- Remplissage du vecteur 1
+            end loop;
+            -- Récupération du nombre de voix de chaque candidat du département 2
+            v2 := '{}';
+            for s in (
+                select sum(voix)
+                from score
+                where code_departement = ligne.d2
+                group by id_candidat
+                order by id_candidat
+            ) loop
+                select array_append(v2, s) into v2; -- Remplissage du vecteur 2
+            end loop;
+            -- Écriture des données dans la ligne de résultat
+            sortie."Département 1" := concat(ligne.n1, ' (', lpad(ligne.d1::text, 2, '0'), ')')::varchar(30);
+            sortie."Département 2" := concat(ligne.n2, ' (', lpad(ligne.d2::text, 2, '0'), ')')::varchar(30);
+            sortie.s := null;
+            sortie.debug := concat(i, ' ', v1, ' ', v2)::varchar(200);
+            i := i+1;
+            return next sortie;
+        end loop;
+        -- pour chaque couple d1, d2:
+        --    il faut calculer A.B / ||A||.||B||
+        --    avec A.B = A.(voix candidat 1)*B.(voix candidat 1)
+        --        + A.(voix candidat 2)*B.(voix candidat 2)
+        --        + A.(voix candidat ...)*B.(voix candidat ...)
+        --    et ||A|| = racine( (A.(voix candidat 1))² + (A.(voix candidat 2))² + (A.(voix candidat ...))² )
+    end;
+$get_similarite$ language plpgsql;
+select * from get_similarite();
+```
