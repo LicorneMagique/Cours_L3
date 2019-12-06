@@ -235,7 +235,7 @@ select avg(voix) from get_score('MACRON', 'Emmanuel');
 select avg(voix) from get_score('MÉLENCHON', 'Jean-Luc');
 ```
 
-## Question 8 - Similarités entre départements
+## Question 7 - Similarités entre départements
 
 ```sql
 -- Type de la table du résultat de la fonction get_similarite()
@@ -243,8 +243,7 @@ drop type if exists similarite;
 create type similarite as (
     "Département 1" varchar(30),
     "Département 2" varchar(30),
-    "Similarité" decimal,
-    debug varchar(200)
+    "Similarité" decimal
 );
 -- Type des couples de département
 drop type if exists similarite_data;
@@ -260,11 +259,13 @@ create or replace function get_similarite() returns setof similarite as $get_sim
         ligne similarite_data;
         sortie similarite;
         i decimal; -- Pour les boucles
-        v1 integer array; -- Vecteur 1
-        v2 integer array; -- Vecteur 2
-        s integer; -- Pour requette de score
+        v1 decimal array; -- Vecteur 1
+        v2 decimal array; -- Vecteur 2
+        v1v2 decimal; -- v1.v2
+        _v1 decimal; -- Norme de v1 : ||v1||
+        _v2 decimal; -- Norme de v2 : ||v2||
+        s decimal; -- Pour requette de score
     begin
-        i := 0;
         -- Pour chaque couple de département
         for ligne in (
             select d1.code, d1.nom, d2.code, d2.nom
@@ -293,20 +294,28 @@ create or replace function get_similarite() returns setof similarite as $get_sim
             ) loop
                 select array_append(v2, s) into v2; -- Remplissage du vecteur 2
             end loop;
+            i := 0;
+            v1v2 := 0;
+            _v1 := 0;
+            _v2 := 0;
+            loop
+                -- Calcul de v1.v2
+                exit when i = (select array_length(v2, 1));
+                i := i+1;
+                v1v2 := v1v2 + v1[i]*v2[i];
+                -- Calcul de v1² et v2² (pour préparer les normes)
+                _v1 := _v1 + v1[i]*v1[i];
+                _v2 := _v2 + v2[i]*v2[i];
+            end loop;
+            -- Calcul de ||v1|| et ||v2||
+            _v1 := sqrt(_v1);
+            _v2 := sqrt(_v2);
             -- Écriture des données dans la ligne de résultat
             sortie."Département 1" := concat(ligne.n1, ' (', lpad(ligne.d1::text, 2, '0'), ')')::varchar(30);
             sortie."Département 2" := concat(ligne.n2, ' (', lpad(ligne.d2::text, 2, '0'), ')')::varchar(30);
-            sortie.s := null;
-            sortie.debug := concat(i, ' ', v1, ' ', v2)::varchar(200);
-            i := i+1;
+            sortie."Similarité" := v1v2 / (_v1 * _v2);
             return next sortie;
         end loop;
-        -- pour chaque couple d1, d2:
-        --    il faut calculer A.B / ||A||.||B||
-        --    avec A.B = A.(voix candidat 1)*B.(voix candidat 1)
-        --        + A.(voix candidat 2)*B.(voix candidat 2)
-        --        + A.(voix candidat ...)*B.(voix candidat ...)
-        --    et ||A|| = racine( (A.(voix candidat 1))² + (A.(voix candidat 2))² + (A.(voix candidat ...))² )
     end;
 $get_similarite$ language plpgsql;
 select * from get_similarite();
