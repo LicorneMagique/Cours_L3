@@ -10,21 +10,18 @@ Context (P Q R A Z J F M S T: Prop).
    - élimination de la flèche : apply [nom de l'hypothèse utilisée] *)
 Theorem exercice_1a: P -> (P -> Q) -> Q.
 Proof.
-intro HP.
-intro HPQ.
-apply HPQ in HP.
-assumption.
+intros.
+apply H0.
+apply H.
 Qed.
 
 
 Theorem exercice_1b: (P -> Q) -> (Q -> R) -> (P -> R).
 Proof.
-intro HPQ.
-intro HQR.
-intro HP.
-apply HPQ in HP.
-apply HQR in HP.
-assumption.
+intros.
+apply H0.
+apply H.
+apply H1.
 Qed.
 
 (* Exercice 2 LE ET  ***********************)
@@ -33,23 +30,21 @@ Qed.
 *)
 Theorem exercice_2a: (P -> Q) /\ (Q -> R) -> (P -> R).
 Proof.
-intro HPQ.
-destruct HPQ as [HPQ HQR].
-intro HP.
-apply HPQ in HP.
-apply HQR in HP.
-assumption.
+intros.
+destruct H.
+apply H1.
+apply H.
+apply H0.
 Qed.
 
 (* - introduction du /\ : split *)
 (* On obtient bien deux sous-buts *)
 Theorem exercice_2b : P -> Q -> P /\ Q.
 Proof.
-intro HP.
-intro HQ.
+intros.
 split.
-assumption.
-assumption.
+- apply H.
+- apply H0.
 Qed.
   
 (* Exercice 3 LE OU  ***********************)
@@ -61,8 +56,8 @@ Qed.
 
 Theorem exercice_3a: (P \/ Q) -> (Q \/ P).
 Proof.
-intro HPQ.
-destruct HPQ.
+intros.
+destruct H.
 right.
 assumption.
 left.
@@ -116,19 +111,16 @@ apparaissent dans les destruct avec "as" et suivant le nombre de sous-buts *)
 *)
 Theorem zoe_va_a_paris : ((A /\ J -> Z) /\ (J -> A) /\ (J \/ Z)) -> Z.
 Proof.
-intro HAJZ.
-destruct HAJZ as [HAJZ HJAJZ].
-destruct HJAJZ as [HJA HJZ].
-destruct HJZ.
-apply HAJZ.
+intros.
+destruct H.
+destruct H0.
+destruct H1.
+apply H.
 split.
--
-apply HJA.
-assumption.
--
-assumption.
--
-assumption.
+- apply H0.
+  apply H1.
+- apply H1.
+- apply H1.
 Qed.
 
 (* Exercice 5 LE NOT *************************)
@@ -138,28 +130,25 @@ Qed.
 *)
 Theorem exercice_5a : (~P \/ ~Q) -> ~(P /\ Q).
 Proof.
-intro H.
+intros.
 unfold not in H.
 unfold not.
 destruct H.
--
-intro H2.
-destruct H2.
-apply H.
-assumption.
--
-intro H3.
-destruct H3.
-apply H.
-assumption.
+- intros.
+  destruct H0.
+  apply H.
+  apply H0.
+- intros.
+  destruct H0.
+  apply H.
+  apply H1.
 Qed.
 
 (* Si on a toto et ~toto dans les hypothèses, alors le but est résolu avec "contradiction." *)
 
 Theorem exercice_5b : P -> ~P -> Q.
 Proof.
-  intro hp.
-  intro hnp.
+  intros.
   contradiction.
 Qed.
 
@@ -176,23 +165,37 @@ Context (Tiers_exclus: forall X: Prop, X \/ ~X).
 
 Theorem exercice_6a: ((P -> Q) -> P) -> P.
 Proof.
-intro H.
-apply H.
-.
-
+destruct (Tiers_exclus P).
+- intros.
+  apply H.
+- intros.
+  apply H0.
+  contradiction.
 Qed.
 
 (* Deuxième modélisation *)
 (* Modéliser l'exercice de TD "Frodon va au Mordor", prouver que Frodon est triste *)
 
-Theorem exercice_6b : .
+(*Theorem exercice_6b : .
 Proof.
 Qed.
-
+*)
 
 (* Quid de ~~P et P ? *)
 Theorem exercice_6c: (~~P -> P) /\ (P -> ~~P).
 (* Pour l'un des deux sens on aura besoin du tiers-exclu et, en remarquant qu'on peut déduire False des hypothèses, de la simplification "exfalso". *)
 
 Proof.
+split.
+- intros.
+  unfold not in H.
+  destruct (Tiers_exclus P).
+  + apply H0.
+  + exfalso.
+  contradiction.
+-  intros.
+  unfold not.
+  destruct (Tiers_exclus False).
+  + contradiction.
+  + contradiction.
 Qed.
