@@ -23,6 +23,7 @@ class Node
     friend class Graphe;
     public:
         Node();
+        Node(int);
         void add(int);
         void vide();
 
@@ -35,13 +36,14 @@ class Node
         Node* nord;
         Node* est;
         Node* ouest;
+        int* flux; // [0] = nord, [1] = sud, [2] = est, [3] = ouest, [4] = S, [5] = T
 };
 
 class Graphe
 {
     public :
         // Constructeurs ---- Destructeur
-        Graphe(Image); // Constructeur par défaut
+        Graphe(Image);
         ~Graphe();
 
         // Fonctions de manipulation
@@ -52,9 +54,11 @@ class Graphe
 
         // Affichage
         void show();
+        void show_info();
+
     private :
-        Node * tous_les_noeuds;
-        Image * image;
+        Image* image;
+        Node* S;
 };
 
 #endif
