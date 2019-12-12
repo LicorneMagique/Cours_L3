@@ -86,7 +86,7 @@ Bureau(_#Code du département, _#Code de la commune, _#Bureau de vote, _Nom Bure
 ScoreCandidat(_#Code du département, _#Code de la commune, _#Bureau de vote, _#Nom Bureau Vote, _#N°Panneau, Voix)
 ```
 
-Ce model passe les formes normales 1, 2, 3 si on enlève les pourcentages qui peuvent être calculés, FNBC
+Ce model passe les formes normales 1, 2, 3 et FNBC
 
 ## Question 5 - Création et remplissage des tables
 
