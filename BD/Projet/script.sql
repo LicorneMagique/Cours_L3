@@ -1,14 +1,9 @@
-# Projet de bases de données
+/**
+ * Projet de bases de données - 2019
+ * Julien GIRAUD
+ * Léa VIGLIANO
+ */
 
-Réalisé par **Julien GIRAUD** et **Léa VIGLIANO**
-
----
-
-## Question 1 et 2
-
-Nous avons rassemblé toutes les données dans un seul fichier CSV. Le code permettant de créer la table est le suivant :
-
-```sql
 -- Création de la base
 drop table if exists "election-csv";
 CREATE TABLE "election-csv" (
@@ -51,46 +46,7 @@ CREATE TABLE "election-csv" (
 
 -- Adresse du fichier à mettre à jour par l'utilisateur du script
 copy "election-csv" from './data.csv' delimiter ';' csv header;
-```
 
-## Question 3
-
-Nous avons trouvé les DF suivantes :
-
-```txt
-{
-    "Code du département" -> "Département"
-    "Département" -> "Code du département"
-    "Code de la circonscription" -> "Circonscription"
-    "Code du département", "Code de la commune" -> "Commune", "Code Insee"
-    "Code du département", "Code de la commune", "Bureau de vote", "Nom Bureau vote" -> "Coordonnées", "Code Postal", "Ville", "Code de la circonscription", "uniq_bdv", "Inscrits", "Abstentions", "% Abs/Ins", "Votants", "% Vot/Ins", "Blancs", "% Blancs/Ins", "% Blancs/Vot", "Nuls", "% Nuls/Ins", "% Nuls/Vot", "Exprimés", "% Exp/Ins", "% Exp/Vot"
-    "N°Panneau" -> "Sexe", "Nom", "Prénom"
-    "N°Panneau", "Code du département", "Code de la commune", "Bureau de vote", "Nom Bureau vote" -> "Voix", "% Voix/Ins", "% Voix/Exp"
-}
-```
-
-## Question 4
-
-Notre schéma entité/association est le suivant :
-
-![E/A](Schéma_Entité-Association.png)
-
-Cela correspond à ce model relationnel :
-
-```txt
-Candidat(_N°Panneau, Sexe, Nom, Prénom)
-Departement(_Code du département, Département)
-Circonscription(_Code de la circonscription, Circonscription)
-Commune(_#Code du département, _Code de la commune, Commune)
-Bureau(_#Code du département, _#Code de la commune, _#Bureau de vote, _Nom Bureau Vote, Ville, Code Postal, #Code de la circonscription, Coordonnées, uniq_bdv, Inscrits, Abstentions, Votants, Blancs, Nuls, Exprimés)
-ScoreCandidat(_#Code du département, _#Code de la commune, _#Bureau de vote, _#Nom Bureau Vote, _#N°Panneau, Voix)
-```
-
-Ce model passe les formes normales 1, 2, 3 si on enlève les pourcentages qui peuvent être calculés, FNBC
-
-## Question 5 - Création et remplissage des tables
-
-```sql
 -- #### Nettoyage du projet ####
 do $nettoyage$ begin
     drop function if exists get_similarite();
@@ -204,11 +160,6 @@ insert into score (
     from "election-csv"
 );
 
-```
-
-## Question 6 - Affichage des scores
-
-```sql
 drop function if exists get_score(varchar, varchar);
 create or replace function get_score(n varchar, p varchar) returns table (
     voix decimal,
@@ -240,18 +191,6 @@ create or replace function get_score(n varchar, p varchar) returns table (
     end;
 $get_score$ language plpgsql;
 
--- Quelques exemples d'utilisation
-select * from get_score('LE PEN', 'Marine');
-select * from get_score('MACRON', 'Emmanuel');
-select * from get_score('MÉLENCHON', 'Jean-Luc');
-select avg(voix) from get_score('LE PEN', 'Marine');
-select avg(voix) from get_score('MACRON', 'Emmanuel');
-select avg(voix) from get_score('MÉLENCHON', 'Jean-Luc');
-```
-
-## Question 7 - Similarités entre départements
-
-```sql
 -- Type de la table du résultat de la fonction get_similarite()
 drop type if exists similarite;
 create type similarite as (
@@ -332,12 +271,7 @@ create or replace function get_similarite() returns setof similarite as $get_sim
         end loop;
     end;
 $get_similarite$ language plpgsql;
-select * from get_similarite();
-```
 
-## Question 8 - Meilleurs scores des candidats
-
-```sql
 -- Score max de chaque candidat le bdv, la commune où il a fait le meilleur score
 select distinct sr.nom, sr.prenom, sr."pourcentage", gs.bureau, gs.commune, gs.departement
 from (
@@ -348,8 +282,3 @@ from (
 where sr."pourcentage" = gs."% voix/votants"
 and c.nom = sr.nom
 order by sr.pourcentage desc;
-```
-
-## Question 9 - Script SQL
-
-Voir le fichier [script.sql](./script.sql), il contient tout le code contenu dans ce fichier à l'exception des exemples d'utilisation. Il faudra cependant y mettre à jour l'adresse du fichier de données CSV de notre archive.
