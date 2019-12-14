@@ -13,11 +13,19 @@ int main()
 {
     cout << "Hello world!" << endl;
 
-    string adresse = "image.pgm";
-    Image im = Image(adresse);
-    Graphe g = Graphe(im);
-    //g.show();
+    // Sigma est de l'ordre de l'écart type de la dispersion des valeurs autour du noir et du blanc
+    // noir -> [0-127], blanc -> [128-255], on peut partir sur sigma = 64
+    int sigma = 64;
+
+    int alpha = 4;
+
+    string adresse = "image2.pgm";
+    Graphe g = Graphe(adresse, sigma, alpha); // Utilisation du constructeur implicite string → image
+    g.show();
     g.show_info();
+
+    g.test();
+    g.ford_fulkerson();
 
     return 0;
 }

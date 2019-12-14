@@ -23,42 +23,53 @@ class Node
     friend class Graphe;
     public:
         Node();
-        Node(int);
+        Node(int, float);
         void add(int);
         void vide();
+        float get_poids_S(int);
+        float get_poids_T(int);
 
         // Affichage
         void show();
         
     private :
         int val;
-        Node* sud;
         Node* nord;
+        Node* sud;
         Node* est;
         Node* ouest;
-        int* flux; // [0] = nord, [1] = sud, [2] = est, [3] = ouest, [4] = S, [5] = T
+        float alpha; // C'est juste plus pratique...
+        float* poids; // Valeurs des arcs [0]=nord, [1]=sud, [2]=est, [3]=ouest, [4]=S et [5]=T
+        bool* utilisable; // Indique si l'arc est utilisable (false = supprimé)
 };
 
 class Graphe
 {
     public :
         // Constructeurs ---- Destructeur
-        Graphe(Image);
+        Graphe(Image, float, float);
         ~Graphe();
 
         // Fonctions de manipulation
+        float get_valuation(Node*, Node*);
         int get_sud(int);
         int get_nord(int);
         int get_est(int);
         int get_ouest(int);
+        vector<Node*> ford_fulkerson_get_chemin();
+        void ford_fulkerson();
+        void ford_fulkerson_construction_graphe();
 
         // Affichage
         void show();
         void show_info();
+        void test();
 
     private :
         Image* image;
-        Node* S;
+        Node* pixels;
+        float sigma;
+        float alpha;
 };
 
 #endif
