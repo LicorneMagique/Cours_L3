@@ -5,6 +5,8 @@
 #ifndef _Graphe
 #define _Graphe
 
+#include <vector>
+
 using namespace std;
 
 class Image
@@ -50,15 +52,18 @@ class Graphe
         Graphe(Image, float, float);
         ~Graphe();
 
-        // Fonctions de manipulation
+        // Fonctions de calcul
         float get_valuation(Node*, Node*);
         int get_sud(int);
         int get_nord(int);
         int get_est(int);
         int get_ouest(int);
-        vector<Node*> ford_fulkerson_get_chemin();
-        void ford_fulkerson();
-        void ford_fulkerson_construction_graphe();
+
+        // Ford Fulkerson
+        void ford_fulkerson(); // Fonction générale
+        void ford_fulkerson_construction_graphe(); // Initialisation graphe orienté
+        vector<int> ford_fulkerson_get_chemin(); // Bellman Ford global + traitement des arcs
+        float ford_fulkerson_get_poids_min(vector<int>); // Avant le traitement des arcs
 
         // Affichage
         void show();

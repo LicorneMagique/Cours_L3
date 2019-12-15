@@ -19,7 +19,7 @@ int main()
 
     int alpha = 4;
 
-    string adresse = "image2.pgm";
+    string adresse = "image5.pgm";
     Graphe g = Graphe(adresse, sigma, alpha); // Utilisation du constructeur implicite string → image
     g.show();
     g.show_info();

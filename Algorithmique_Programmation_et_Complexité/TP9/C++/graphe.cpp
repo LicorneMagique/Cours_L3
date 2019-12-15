@@ -209,109 +209,174 @@ void Graphe::ford_fulkerson_construction_graphe()
     cout << endl;
 }
 
-vector<Node*> Graphe::ford_fulkerson_get_chemin() // Version adaptée de l'algorithme de Bellman Ford
+vector<int> Graphe::ford_fulkerson_get_chemin() // Version adaptée de l'algorithme de Bellman Ford
 // Source : https://www.geeksforgeeks.org/bellman-ford-algorithm-dp-23/
 {
-    // Étape 0 : Recherche de la "source du graphe", autrement dit min(S)
-    Node* p;
-    Node* source = nullptr;
-    int src = -1;
-    float min = -1;
-    for (int i = 0; i < image->hauteur*image->largeur; i++)
-    {
-        p = &pixels[i];
-        if (p->utilisable[4]) // Si le sommet est relié à la source S
-            if (min == -1 || min > p->poids[4])
-            {
-                min = p->poids[4];
-                source = &pixels[i];
-                src = i;
-            }
-    }
-    cout << "val : " << source->val << ", indice : " << src << endl;
-
     int V = image->hauteur * image->largeur; // Nombre de sommets
     int E = 6; // Nombre de relations d'un sommet
     float dist[V+1]; // Tableau des distances
   
     // Étape 1 : Initialisation des distances de la source à tous les autres sommets sur INFINI
     float inf = numeric_limits<float>::infinity();
-    for (int i = 0; i < V+1; i++)
+    for (int i = 0; i < V+2; i++)
         dist[i] = inf;
-    dist[src] = 0;
+    dist[V] = 0; // S
 
     // Étape 2 : Pour chaque arc (A,B) on enregistre les sommets qui donnent les plus courts chemins
     int v;
     float weight;
-    int parents[V+1];
-    for (int i = 0; i < V - 1; i++) // Il aurait été plus pertinant d'utiliser un tableau pour cette partie...
+    int parents[V+2];
+    for (int i = 0; i < V+2; i++) 
+            parents[i] = -1;
+    bool changement = true;
+    Node* p;
+    while (changement) // Tant qu'on trouve des chemins plus courts
     {
-        p = &pixels[i];
-        parents[i] = -1;
-        if (p->utilisable[0])
+        changement = false;
+        for (int i = 0; i < V-1; i++) // Il aurait été plus pertinant d'utiliser un tableau pour cette partie...
         {
-            v = get_nord(i); // Indice de B dans dist[]
-            weight = 1/p->poids[0]; // Poids de l'arc (A,B)
-            if (dist[i] != inf && dist[i] + weight < dist[v])
+            p = &pixels[i];
+            if (p->utilisable[0])
             {
-                dist[v] = dist[i] + weight;
-                parents[v] = i;
+                v = get_nord(i); // Indice de B dans dist[]
+                weight = 1/p->poids[0]; // Poids de l'arc (A,B)
+                if (dist[i] != inf && dist[i] + weight < dist[v])
+                {
+                    dist[v] = dist[i] + weight;
+                    parents[v] = i;
+                    changement = true;
+                    //cout << "a";
+                }
             }
-        }
-        if (p->utilisable[1])
-        {
-            v = get_sud(i);
-            weight = 1/p->poids[1];
-            if (dist[i] != inf && dist[i] + weight < dist[v])
+            if (p->utilisable[1])
             {
-                dist[v] = dist[i] + weight;
-                parents[v] = i;
+                v = get_sud(i);
+                weight = 1/p->poids[1];
+                if (dist[i] != inf && dist[i] + weight < dist[v])
+                {
+                    dist[v] = dist[i] + weight;
+                    parents[v] = i;
+                    changement = true;
+                    //cout << "b";
+                }
             }
-        }
-        if (p->utilisable[2])
-        {
-            v = get_est(i);
-            weight = 1/p->poids[2];
-            if (dist[i] != inf && dist[i] + weight < dist[v])
+            if (p->utilisable[2])
             {
-                dist[v] = dist[i] + weight;
-                parents[v] = i;
+                v = get_est(i);
+                weight = 1/p->poids[2];
+                if (dist[i] != inf && dist[i] + weight < dist[v])
+                {
+                    dist[v] = dist[i] + weight;
+                    parents[v] = i;
+                    changement = true;
+                    //cout << "c";
+                }
             }
-        }
-        if (p->utilisable[3])
-        {
-            v = get_ouest(i);
-            weight = 1/p->poids[3];
-            if (dist[i] != inf && dist[i] + weight < dist[v])
+            if (p->utilisable[3])
             {
-                dist[v] = dist[i] + weight;
-                parents[v] = i;
+                v = get_ouest(i);
+                weight = 1/p->poids[3];
+                if (dist[i] != inf && dist[i] + weight < dist[v])
+                {
+                    dist[v] = dist[i] + weight;
+                    parents[v] = i;
+                    changement = true;
+                    //cout << "d";
+                }
             }
-        }
-        // Cas de 4 : Impossible car rien ne va sur S
-        if (p->utilisable[5])
-        {
-            v = V; // Fin du tableau
-            weight = 1/p->poids[5]; // Poids de l'arc (A,B)
-            if (dist[i] != inf && dist[i] + weight < dist[v])
+            if (p->utilisable[4])
             {
-                dist[v] = dist[i] + weight;
-                parents[v] = i;
+                v = V; // S
+                weight = 1/p->poids[4];
+                if (weight != inf && dist[i] > weight)
+                {
+                    dist[i] = weight;
+                    parents[i] = v;
+                    changement = true;
+                    //cout << "e";
+                }
+            }
+            if (p->utilisable[5])
+            {
+                v = V+1; // T
+                weight = 1/p->poids[5];
+                if (dist[i] != inf && dist[i] + weight < dist[v])
+                {
+                    //cout << "ancienne valeur : " << dist[v] << ", nouvelle : " << dist[i] + weight;
+                    //if (dist[i] < 0) break;
+                    dist[v] = dist[i] + weight;
+                    parents[v] = i;
+                    changement = true;
+                }
             }
         }
     }
 
-    int parent = V;
-    if (dist[V] < inf)
-        while (parents[parent] != -1)
-        {
-            cout << parents[parent] << " ";
-            parent = parents[parent];
-        }
-    cout << endl;
+    // Affichage des distances
+    /*for (int i = 0; i < V+2; i++)
+    {
+        cout << "dist[" << i << "] = " << dist[i] << ", parents[i] = " << parents[i] << endl;
+    }*/
 
-    vector<Node*> chemin;
+    // Enregistrement des noeuds du chemin dans le résultat de la fonction
+    int parent = V+1; // Sommet de T
+    vector<int> chemin;
+    if (dist[V+1] < inf)
+        while (parents[parent] != V)
+        {
+            chemin.push_back(parents[parent]);
+            if (parent == V+1)
+                cout << "[" << pixels[parents[parent]].poids[5] << "](T, " << parents[parent] << ")";
+            else
+            {
+                float p = -1;
+                if (get_nord(parents[parent]) == parent)
+                    p = pixels[parents[parent]].poids[0];
+                else if (get_sud(parents[parent]) == parent)
+                    p = pixels[parents[parent]].poids[1];
+                else if (get_est(parents[parent]) == parent)
+                    p = pixels[parents[parent]].poids[2];
+                else if (get_ouest(parents[parent]) == parent)
+                    p = pixels[parents[parent]].poids[3];
+                cout << " <- [" << p << "](" << parent << ", " << parents[parent] << ")";
+               // if (p < 0) break;
+            }
+            parent = parents[parent];
+            if (parents[parent] == V)
+                cout << " <- [" << pixels[parent].poids[4] << "](" << parent << ", S)";
+            
+        }
+        cout << endl;
+
     return chemin;
+}
+
+float Graphe::ford_fulkerson_get_poids_min(vector<int> chemin)
+{
+    float min, poids;
+    for (int i = 0; i < chemin.size(); i++)
+    {
+        if (i == 0) // Début
+            min = pixels[chemin[i]].poids[5];
+        if (i == chemin.size() -1)
+        {
+            poids = pixels[chemin[i]].poids[4];
+            if (poids < min)
+                min = poids;
+        }
+        else if (chemin[i+1] == get_nord(chemin[i]))
+            poids = pixels[chemin[i]].poids[0];
+        else if (chemin[i+1] == get_sud(chemin[i]))
+            poids = pixels[chemin[i]].poids[1];
+        else if (chemin[i+1] == get_est(chemin[i]))
+            poids = pixels[chemin[i]].poids[2];
+        else if (chemin[i+1] == get_ouest(chemin[i]))
+            poids = pixels[chemin[i]].poids[3];
+        if (poids < min)
+            min = poids;
+    }
+
+    return min;
 }
 
 void Graphe::ford_fulkerson()
@@ -319,18 +384,65 @@ void Graphe::ford_fulkerson()
     // Construction du graphe orienté (écriture des valeurs dans poids[] et utilisable[])
     ford_fulkerson_construction_graphe();
 
+    /*cout << "Toto" << endl;
+    for (int i = 198; i < 201; i++)
+        cout << "Pixel : " << i << ", poids[0] : " << pixels[i].poids[0] << ", poids[1] : "
+                << pixels[i].poids[1] << ", poids[2] : " << pixels[i].poids[2] << ", poids[3] : "
+                << pixels[i].poids[3] << ", poids[4] : " << pixels[i].poids[4] << ", poids[5] : "
+                << pixels[i].poids[5] << endl;
+    cout << endl;*/
+
     // Tant qu'il existe un chemin de S à T ne passant pas par un arc de poids nul
-    vector<Node*> chemin;
-    int min;
+    vector<int> chemin;
+    float min;
     while ((chemin = ford_fulkerson_get_chemin()).size() > 0)
     {
-        // On récupère le poids de l'arc le plus faible
-        /*min = ford_fulkerson_get_poids_min(chemin);
+        cout << "Voici le chemin :";
+        for (int i = 0; i < chemin.size(); i++)
+            cout << " " << chemin[i];
+        cout << endl;
+        // On récupère le poids de l'arc le plus faible du chemin
+        min = ford_fulkerson_get_poids_min(chemin);
+        cout << "Le min : " << min << endl;
 
-        // Pour chaque arc du chemin
-        for (int i = 0; i < chemin.size()-1; i++)
-            ford_fulkerson_traitement_arc(chemin[i], chemin[i+1]);*/
+        // Pour chaque arc (A, B) du chemin, enlever min de l'arc et ajouter min sur l'arc (B, A)
+        for (int i = 0; i < chemin.size(); i++) // ATTENTION le chemin est à l'envers
+        {
+            if (i == 0) // Cas du traitement de T
+                pixels[chemin[i]].poids[5] -= min;
+            if (i == chemin.size() -1) // Cas du traitement de S
+                pixels[chemin[i]].poids[4] -= min;
+            else if (chemin[i+1] == get_nord(chemin[i])) // Tous les autres cas
+            {
+                pixels[chemin[i+1]].poids[1] -= min;
+                pixels[chemin[i]].poids[0] += min;
+            }
+            else if (chemin[i+1] == get_sud(chemin[i]))
+            {
+                pixels[chemin[i+1]].poids[0] -= min;
+                pixels[chemin[i]].poids[1] += min;
+            }
+            else if (chemin[i+1] == get_est(chemin[i]))
+            {
+                pixels[chemin[i+1]].poids[3] -= min;
+                pixels[chemin[i]].poids[2] += min;
+            }
+            else if (chemin[i+1] == get_ouest(chemin[i]))
+            {
+                pixels[chemin[i+1]].poids[2] -= min;
+                pixels[chemin[i]].poids[3] += min;
+            }
+        }
+        /*cout << "Toto2" << endl;
+        for (int i = 198; i < 201; i++)
+            cout << "Pixel : " << i << ", poids[0] : " << pixels[i].poids[0] << ", poids[1] : "
+                    << pixels[i].poids[1] << ", poids[2] : " << pixels[i].poids[2] << ", poids[3] : "
+                    << pixels[i].poids[3] << ", poids[4] : " << pixels[i].poids[4] << ", poids[5] : "
+                    << pixels[i].poids[5] << endl;
+        cout << endl;*/
     }
+    
+    cout << "C'est fini !" << endl;
 
 }
 
