@@ -6,14 +6,18 @@ Réalisé par **Julien GIRAUD** (p1704709)
 
 ## Lancer le programme
 
-Le programme attend comme paramètres le nom du fichier image source (src.pgm), le nom du fichier à produire (dest.pgm), alpha et éventuellement sigma
+Le programme attend comme paramètres le nom du fichier image source (image4.pgm), le nom du fichier à produire (toto.pgm), alpha (50) et éventuellement sigma (127)
 
 ```shell
+# Compilation
 make
+
 # Sans sigma
-./main image4.pgm toto 50
+./main image4.pgm toto.pgm 50
 
 # Avec sigma
-./main image4.pgm toto 50 127
+./main image4.pgm toto.pgm 50 127
+
+# Nettoyage
 make clean
 ```
