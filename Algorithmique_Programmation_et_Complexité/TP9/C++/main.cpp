@@ -2,8 +2,6 @@
  * Réalisé par Julien GIRAUD - 2019
  */
 
-//#include <cstdio>
-//#include <cstdlib>
 #include <iostream>
 #include "graphe.h"
 
@@ -19,13 +17,12 @@ int main()
 
     int alpha = 4;
 
-    string adresse = "image5.pgm";
+    string adresse = "image4.pgm";
+    string sortie = "toto.pgm";
     Graphe g = Graphe(adresse, sigma, alpha); // Utilisation du constructeur implicite string → image
-    g.show();
     g.show_info();
-
-    g.test();
     g.ford_fulkerson();
+    g.save(sortie);
 
     return 0;
 }

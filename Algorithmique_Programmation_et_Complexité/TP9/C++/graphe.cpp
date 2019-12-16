@@ -27,7 +27,8 @@ Image::Image(const string& adresse)
             hauteur = stoi(line.substr(line.find(' ') + 1, line.length()));
             pixels = new int[largeur*hauteur];
             i = 0;
-            getline(ifs, line); // On vire l'intensité maximale
+            getline(ifs, line); // line <- Intensité maximale
+            max = stoi(line);
         }
         else if (i >= 0)
             pixels[i++] = stoi(line);
@@ -233,7 +234,7 @@ vector<int> Graphe::ford_fulkerson_get_chemin() // Version adaptée de l'algorit
     while (changement) // Tant qu'on trouve des chemins plus courts
     {
         changement = false;
-        for (int i = 0; i < V-1; i++) // Il aurait été plus pertinant d'utiliser un tableau pour cette partie...
+        for (int i = 0; i < V; i++) // Il aurait été plus pertinant d'utiliser un tableau pour cette partie...
         {
             p = &pixels[i];
             if (p->utilisable[0])
@@ -245,7 +246,6 @@ vector<int> Graphe::ford_fulkerson_get_chemin() // Version adaptée de l'algorit
                     dist[v] = dist[i] + weight;
                     parents[v] = i;
                     changement = true;
-                    //cout << "a";
                 }
             }
             if (p->utilisable[1])
@@ -257,7 +257,6 @@ vector<int> Graphe::ford_fulkerson_get_chemin() // Version adaptée de l'algorit
                     dist[v] = dist[i] + weight;
                     parents[v] = i;
                     changement = true;
-                    //cout << "b";
                 }
             }
             if (p->utilisable[2])
@@ -269,7 +268,6 @@ vector<int> Graphe::ford_fulkerson_get_chemin() // Version adaptée de l'algorit
                     dist[v] = dist[i] + weight;
                     parents[v] = i;
                     changement = true;
-                    //cout << "c";
                 }
             }
             if (p->utilisable[3])
@@ -281,7 +279,6 @@ vector<int> Graphe::ford_fulkerson_get_chemin() // Version adaptée de l'algorit
                     dist[v] = dist[i] + weight;
                     parents[v] = i;
                     changement = true;
-                    //cout << "d";
                 }
             }
             if (p->utilisable[4])
@@ -293,7 +290,6 @@ vector<int> Graphe::ford_fulkerson_get_chemin() // Version adaptée de l'algorit
                     dist[i] = weight;
                     parents[i] = v;
                     changement = true;
-                    //cout << "e";
                 }
             }
             if (p->utilisable[5])
@@ -354,29 +350,117 @@ vector<int> Graphe::ford_fulkerson_get_chemin() // Version adaptée de l'algorit
 float Graphe::ford_fulkerson_get_poids_min(vector<int> chemin)
 {
     float min, poids;
+    float min2, poids2;
     for (int i = 0; i < chemin.size(); i++)
     {
-        if (i == 0) // Début
-            min = pixels[chemin[i]].poids[5];
-        if (i == chemin.size() -1)
+        //cout << "Index actuel : " << chemin[i];
+        if (i == 0) // T
         {
-            poids = pixels[chemin[i]].poids[4];
-            if (poids < min)
-                min = poids;
+            min2 = pixels[chemin[i]].poids[5];
+            //cout << ", Je commence à : " << min2;
+            if (chemin.size() == 1)
+            {
+                poids2 = pixels[chemin[i]].poids[4];
+                if (poids2 < min2)
+                    min2 = poids2;
+            }
         }
-        else if (chemin[i+1] == get_nord(chemin[i]))
-            poids = pixels[chemin[i]].poids[0];
-        else if (chemin[i+1] == get_sud(chemin[i]))
-            poids = pixels[chemin[i]].poids[1];
-        else if (chemin[i+1] == get_est(chemin[i]))
-            poids = pixels[chemin[i]].poids[2];
-        else if (chemin[i+1] == get_ouest(chemin[i]))
-            poids = pixels[chemin[i]].poids[3];
-        if (poids < min)
-            min = poids;
+        else // Tous les arcs sauf T
+        {
+            //cout << ", index du précédent : " << chemin[i-1];
+            if (chemin[i-1] == get_nord(chemin[i]))
+            {
+                //cout << " [" << pixels[chemin[i]].poids[0] << "]NORD";
+                poids2 = pixels[chemin[i]].poids[0];
+            }
+            else if (chemin[i-1] == get_sud(chemin[i]))
+            {
+                //cout << " [" << pixels[chemin[i]].poids[1] << "]SUD";
+                poids2 = pixels[chemin[i]].poids[1];
+            }
+            else if (chemin[i-1] == get_est(chemin[i]))
+            {
+                //cout << " [" << pixels[chemin[i]].poids[2] << "]EST";
+                poids2 = pixels[chemin[i]].poids[2];
+            }
+            else if (chemin[i-1] == get_ouest(chemin[i]))
+            {
+                //cout << " [" << pixels[chemin[i]].poids[3] << "]OUEST";
+                poids2 = pixels[chemin[i]].poids[3];
+            }
+            if (poids2 < min2)
+                min2 = poids2;
+            if (i == chemin.size() - 1) // S
+            {
+                //cout << ", C'est la fin";
+                poids2 = pixels[chemin[i]].poids[4];
+            }
+            if (poids2 < min2)
+                min2 = poids2;
+        }
+
+        //cout << endl;
+
     }
 
-    return min;
+    return min2;
+}
+
+bool Graphe::is_in_vect(int n, vector<int> v)
+{
+    for (int i = 0; i < v.size(); i++)
+        if (v[i] == n)
+            return true;
+    return false;
+}
+
+void Graphe::ford_fulkerson_coloration()
+{    
+    int V = image->hauteur * image->largeur; // Nombre de sommets
+    vector<int> S;
+    Node* p;
+    float inf = numeric_limits<float>::infinity();
+    bool changement;
+
+    for (int i = 0; i < V; i++)
+    {
+        p = &pixels[i];
+        p->val = 128;
+        if (p->poids[4] > 0 && p->poids[4] < inf)
+            S.push_back(i);
+    }
+    changement = true;
+    while (changement)
+    {
+        changement = false;
+        for (int i = 0; i < S.size(); i++)
+        {
+            p = &pixels[S[i]];
+            if (p->val == 128)
+            {
+                changement = true;
+                p->val = 255;
+                if (p->utilisable[0] && p->poids[0] > 0 && p->poids[0] < inf
+                    && !is_in_vect(get_nord(S[i]), S)) // Exploration branche Nord
+                    S.push_back(get_nord(S[i]));
+                if (p->utilisable[1] && p->poids[1] > 0 && p->poids[1] < inf
+                    && !is_in_vect(get_sud(S[i]), S)) // Exploration branche Sud
+                    S.push_back(get_sud(S[i]));
+                if (p->utilisable[2] && p->poids[2] > 0 && p->poids[2] < inf
+                    && !is_in_vect(get_est(S[i]), S)) // Exploration branche Est
+                    S.push_back(get_est(S[i]));
+                if (p->utilisable[3] && p->poids[3] > 0 && p->poids[3] < inf
+                    && !is_in_vect(get_ouest(S[i]), S)) // Exploration branche Ouest
+                    S.push_back(get_ouest(S[i]));
+            }
+        }
+    }
+    for (int i = 0; i < V; i++)
+    {
+        p = &pixels[i];
+        if (p->val == 128)
+            p->val = 0;
+    }
 }
 
 void Graphe::ford_fulkerson()
@@ -385,7 +469,8 @@ void Graphe::ford_fulkerson()
     ford_fulkerson_construction_graphe();
 
     /*cout << "Toto" << endl;
-    for (int i = 198; i < 201; i++)
+    for (int i = 171; i < 201; i++)
+        if (i == 171 || i > 197)
         cout << "Pixel : " << i << ", poids[0] : " << pixels[i].poids[0] << ", poids[1] : "
                 << pixels[i].poids[1] << ", poids[2] : " << pixels[i].poids[2] << ", poids[3] : "
                 << pixels[i].poids[3] << ", poids[4] : " << pixels[i].poids[4] << ", poids[5] : "
@@ -397,10 +482,10 @@ void Graphe::ford_fulkerson()
     float min;
     while ((chemin = ford_fulkerson_get_chemin()).size() > 0)
     {
-        cout << "Voici le chemin :";
+        /*cout << "Voici le chemin :";
         for (int i = 0; i < chemin.size(); i++)
             cout << " " << chemin[i];
-        cout << endl;
+        cout << endl;*/
         // On récupère le poids de l'arc le plus faible du chemin
         min = ford_fulkerson_get_poids_min(chemin);
         cout << "Le min : " << min << endl;
@@ -433,20 +518,29 @@ void Graphe::ford_fulkerson()
                 pixels[chemin[i]].poids[3] += min;
             }
         }
-        /*cout << "Toto2" << endl;
-        for (int i = 198; i < 201; i++)
+        cout << "Toto2" << endl;
+        for (int i = 0; i < 16; i++)
             cout << "Pixel : " << i << ", poids[0] : " << pixels[i].poids[0] << ", poids[1] : "
                     << pixels[i].poids[1] << ", poids[2] : " << pixels[i].poids[2] << ", poids[3] : "
                     << pixels[i].poids[3] << ", poids[4] : " << pixels[i].poids[4] << ", poids[5] : "
                     << pixels[i].poids[5] << endl;
-        cout << endl;*/
+        cout << endl;
     }
+
+    ford_fulkerson_coloration();
     
     cout << "C'est fini !" << endl;
 
 }
 
-void Graphe::test()
+void Graphe::save(string s)
 {
-    cout << pixels[0].get_poids_S(alpha) << " " << pixels[0].get_poids_T(alpha) << endl;
+    ofstream file;
+    file.open (s);
+    file << "P2" << endl
+         << image->largeur << " " << image->hauteur << endl
+         << image->max << endl;
+    for (int i = 0; i < image->largeur*image->hauteur; i++)
+        file << pixels[i].val << endl;
+    file.close();
 }

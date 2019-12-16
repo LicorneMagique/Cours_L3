@@ -18,6 +18,7 @@ class Image
         int* pixels;
         int largeur;
         int hauteur;
+        int max;
 };
 
 class Node
@@ -58,17 +59,19 @@ class Graphe
         int get_nord(int);
         int get_est(int);
         int get_ouest(int);
+        bool is_in_vect(int, vector<int>);
 
         // Ford Fulkerson
         void ford_fulkerson(); // Fonction générale
         void ford_fulkerson_construction_graphe(); // Initialisation graphe orienté
         vector<int> ford_fulkerson_get_chemin(); // Bellman Ford global + traitement des arcs
         float ford_fulkerson_get_poids_min(vector<int>); // Avant le traitement des arcs
+        void ford_fulkerson_coloration(); // Coloration des pixels suite à Ford Fulkerson
 
         // Affichage
         void show();
         void show_info();
-        void test();
+        void save(string); // Affichage dans un fichier en soit...
 
     private :
         Image* image;
