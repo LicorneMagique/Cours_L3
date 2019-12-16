@@ -144,7 +144,7 @@ void Graphe::show()
 
 void Graphe::show_info()
 {
-    cout << "H : " << image->hauteur << ", L : " << image->largeur << endl;
+    cout << image->hauteur << "*" << image->largeur << " (h*l)";
 }
 
 float Graphe::get_valuation(Node* p, Node* q)
@@ -171,12 +171,10 @@ float Node::get_poids_T(int alpha)
 
 void Graphe::ford_fulkerson_construction_graphe()
 {
-    float max = numeric_limits<float>::max();
     float inf = numeric_limits<float>::infinity();
     Node* p;
     for (int i = 0; i < image->hauteur*image->largeur; i++)
     {
-        cout << "i=" << i << endl;
         p = &pixels[i];
         if (p->nord != nullptr)
         {
@@ -202,12 +200,7 @@ void Graphe::ford_fulkerson_construction_graphe()
         p->poids[5] = p->get_poids_T(alpha); // Poids de l'arc (T, p)
         p->utilisable[4] = (p->poids[4] < inf); // arc de taille infini <=> pas d'arc
         p->utilisable[5] = (p->poids[5] < inf);
-        cout << p->poids[0] << " " << p->poids[1] << " " << p->poids[2]
-             << " " << p->poids[3] << " " << p->poids[4] << " " << p->poids[5] << endl;
-        cout << p->utilisable[0] << " " << p->utilisable[1] << " " << p->utilisable[2]
-             << " " << p->utilisable[3] << " " << p->utilisable[4] << " " << p->utilisable[5] << endl;
     }
-    cout << endl;
 }
 
 vector<int> Graphe::ford_fulkerson_get_chemin() // Version adaptée de l'algorithme de Bellman Ford
@@ -298,8 +291,6 @@ vector<int> Graphe::ford_fulkerson_get_chemin() // Version adaptée de l'algorit
                 weight = 1/p->poids[5];
                 if (dist[i] != inf && dist[i] + weight < dist[v])
                 {
-                    //cout << "ancienne valeur : " << dist[v] << ", nouvelle : " << dist[i] + weight;
-                    //if (dist[i] < 0) break;
                     dist[v] = dist[i] + weight;
                     parents[v] = i;
                     changement = true;
@@ -308,12 +299,6 @@ vector<int> Graphe::ford_fulkerson_get_chemin() // Version adaptée de l'algorit
         }
     }
 
-    // Affichage des distances
-    /*for (int i = 0; i < V+2; i++)
-    {
-        cout << "dist[" << i << "] = " << dist[i] << ", parents[i] = " << parents[i] << endl;
-    }*/
-
     // Enregistrement des noeuds du chemin dans le résultat de la fonction
     int parent = V+1; // Sommet de T
     vector<int> chemin;
@@ -321,9 +306,7 @@ vector<int> Graphe::ford_fulkerson_get_chemin() // Version adaptée de l'algorit
         while (parents[parent] != V)
         {
             chemin.push_back(parents[parent]);
-            if (parent == V+1)
-                cout << "[" << pixels[parents[parent]].poids[5] << "](T, " << parents[parent] << ")";
-            else
+            if (parent != V+1)
             {
                 float p = -1;
                 if (get_nord(parents[parent]) == parent)
@@ -334,76 +317,47 @@ vector<int> Graphe::ford_fulkerson_get_chemin() // Version adaptée de l'algorit
                     p = pixels[parents[parent]].poids[2];
                 else if (get_ouest(parents[parent]) == parent)
                     p = pixels[parents[parent]].poids[3];
-                cout << " <- [" << p << "](" << parent << ", " << parents[parent] << ")";
-               // if (p < 0) break;
             }
             parent = parents[parent];
-            if (parents[parent] == V)
-                cout << " <- [" << pixels[parent].poids[4] << "](" << parent << ", S)";
-            
         }
-        cout << endl;
-
     return chemin;
 }
 
 float Graphe::ford_fulkerson_get_poids_min(vector<int> chemin)
 {
     float min, poids;
-    float min2, poids2;
     for (int i = 0; i < chemin.size(); i++)
     {
-        //cout << "Index actuel : " << chemin[i];
         if (i == 0) // T
         {
-            min2 = pixels[chemin[i]].poids[5];
+            min = pixels[chemin[i]].poids[5];
             //cout << ", Je commence à : " << min2;
             if (chemin.size() == 1)
             {
-                poids2 = pixels[chemin[i]].poids[4];
-                if (poids2 < min2)
-                    min2 = poids2;
+                poids = pixels[chemin[i]].poids[4];
+                if (poids < min)
+                    min = poids;
             }
         }
         else // Tous les arcs sauf T
         {
-            //cout << ", index du précédent : " << chemin[i-1];
             if (chemin[i-1] == get_nord(chemin[i]))
-            {
-                //cout << " [" << pixels[chemin[i]].poids[0] << "]NORD";
-                poids2 = pixels[chemin[i]].poids[0];
-            }
+                poids = pixels[chemin[i]].poids[0];
             else if (chemin[i-1] == get_sud(chemin[i]))
-            {
-                //cout << " [" << pixels[chemin[i]].poids[1] << "]SUD";
-                poids2 = pixels[chemin[i]].poids[1];
-            }
+                poids = pixels[chemin[i]].poids[1];
             else if (chemin[i-1] == get_est(chemin[i]))
-            {
-                //cout << " [" << pixels[chemin[i]].poids[2] << "]EST";
-                poids2 = pixels[chemin[i]].poids[2];
-            }
+                poids = pixels[chemin[i]].poids[2];
             else if (chemin[i-1] == get_ouest(chemin[i]))
-            {
-                //cout << " [" << pixels[chemin[i]].poids[3] << "]OUEST";
-                poids2 = pixels[chemin[i]].poids[3];
-            }
-            if (poids2 < min2)
-                min2 = poids2;
+                poids = pixels[chemin[i]].poids[3];
+            if (poids < min)
+                min = poids;
             if (i == chemin.size() - 1) // S
-            {
-                //cout << ", C'est la fin";
-                poids2 = pixels[chemin[i]].poids[4];
-            }
-            if (poids2 < min2)
-                min2 = poids2;
+                poids = pixels[chemin[i]].poids[4];
+            if (poids < min)
+                min = poids;
         }
-
-        //cout << endl;
-
     }
-
-    return min2;
+    return min;
 }
 
 bool Graphe::is_in_vect(int n, vector<int> v)
@@ -468,27 +422,13 @@ void Graphe::ford_fulkerson()
     // Construction du graphe orienté (écriture des valeurs dans poids[] et utilisable[])
     ford_fulkerson_construction_graphe();
 
-    /*cout << "Toto" << endl;
-    for (int i = 171; i < 201; i++)
-        if (i == 171 || i > 197)
-        cout << "Pixel : " << i << ", poids[0] : " << pixels[i].poids[0] << ", poids[1] : "
-                << pixels[i].poids[1] << ", poids[2] : " << pixels[i].poids[2] << ", poids[3] : "
-                << pixels[i].poids[3] << ", poids[4] : " << pixels[i].poids[4] << ", poids[5] : "
-                << pixels[i].poids[5] << endl;
-    cout << endl;*/
-
     // Tant qu'il existe un chemin de S à T ne passant pas par un arc de poids nul
     vector<int> chemin;
     float min;
     while ((chemin = ford_fulkerson_get_chemin()).size() > 0)
     {
-        /*cout << "Voici le chemin :";
-        for (int i = 0; i < chemin.size(); i++)
-            cout << " " << chemin[i];
-        cout << endl;*/
         // On récupère le poids de l'arc le plus faible du chemin
         min = ford_fulkerson_get_poids_min(chemin);
-        cout << "Le min : " << min << endl;
 
         // Pour chaque arc (A, B) du chemin, enlever min de l'arc et ajouter min sur l'arc (B, A)
         for (int i = 0; i < chemin.size(); i++) // ATTENTION le chemin est à l'envers
@@ -518,19 +458,8 @@ void Graphe::ford_fulkerson()
                 pixels[chemin[i]].poids[3] += min;
             }
         }
-        cout << "Toto2" << endl;
-        for (int i = 0; i < 16; i++)
-            cout << "Pixel : " << i << ", poids[0] : " << pixels[i].poids[0] << ", poids[1] : "
-                    << pixels[i].poids[1] << ", poids[2] : " << pixels[i].poids[2] << ", poids[3] : "
-                    << pixels[i].poids[3] << ", poids[4] : " << pixels[i].poids[4] << ", poids[5] : "
-                    << pixels[i].poids[5] << endl;
-        cout << endl;
     }
-
     ford_fulkerson_coloration();
-    
-    cout << "C'est fini !" << endl;
-
 }
 
 void Graphe::save(string s)

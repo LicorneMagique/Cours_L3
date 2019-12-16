@@ -13,8 +13,6 @@ main.o : main.cpp
 	echo main > .gitignore
 	echo main.o >> .gitignore
 	echo graphe.o >> .gitignore
-run :
-	./main
 
 clean :
 	rm main main.o graphe.o
