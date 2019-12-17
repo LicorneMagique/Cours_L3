@@ -1,4 +1,10 @@
-# Droit des contrats
+# Droit des contrats et du travail
+
+---
+
+## Droit des contrats
+
+---
 
 ## Partie 1
 
@@ -144,3 +150,107 @@ Elle doit être envoyée en recommandée avec accusé de réception (LRAR)
 En cas de non respect du contrat on peut agir en **exécution forcée** (on finance la fin des travaux par exemple) puis on pourra saisir le juge pour demander à ce que le cocontracteur me rembourse (tant que c'est raisonnable)
 
 Indépendamment, on peut demander des dommages-et-intérêts pour faute (selon obligation de moyen ou de résultat), préjudice
+
+---
+
+## Début cours 2 à rattraper
+
+---
+
+## Inexécution du contrat - Contrat synallagmatique
+
+Il n'est pas possible de mettre une clause qui interdit de saisir le juge (**clause abusive**), cependant on peut limiter au maximum le cocontractant, exemple il appartient à l'utilisateur de mettre à jour son application
+
+Inexécution du contrat : si l'un des deux parties ne remplit pas sa part du contrat dans une mesure suffisamment grave, l'autre partie peut rompre le contrat. Il est possible de définir les cas d'inexécution dans les clauses
+
+---
+
+## Partie 4
+
+---
+
+## L'arrivée du terme du contrat
+
+Un **CDI** n'est pas un engagement à vie, il est possible de le rompre sous réserve d'un préavis (prévu ou "raisonnable")
+
+Un **CDD** ne peut se rompre qu'à la fin de sa période ou à cause d'une faute grave. Dans l'idée quand on renouvelle un CDD on reprend exactement le même contrat en reportant la date d'échéance
+
+Presistance après la rupture du contrat : clause de confidentialité, clause de non concurence, clause attributive de compétence (fixe la juridiction à saisir en cas de litige)
+
+---
+
+## Droit du travail
+
+---
+
+Il y a plein de sources à prendre en compte
+
+La **jurisprudence** a beaucoup d'importance dans le droit du travail, on retrouve certaines décisions dans les **ordonnances** Macron.
+
+Les [conventions collectives](https://www.legifrance.gouv.fr/initRechConvColl.do) (étendue / non étendue) sont spécifiques aux secteurs d'activité
+
+Un accord d'entreprise n'est pas forcément favorable aux salariés
+
+---
+
+## Partie 1 - L'embauche et le choix du contrat
+
+---
+
+## Caractérisation d'un contrat de travail
+
+Un contrat de travail est une qualification d'ordre public : si dans les faits on correspond à la définition du contrat de travail c'est qu'on en a un, même si c'est écrit auto-entrepreneur sur notre fiche de paie.
+
+## Proposition d'embauche : Offre / Promesse
+
+L'offre ne vaut pas un contrat de travail, sa révocation peut mener à des dommages-et-intérêts, comme tout contrat classique.
+
+La promesse est irrévocable, c'est déjà comme un contrat de travail. Si finalement l'employeur refuse de l'exécuter, en plus des dommages-et-intérêts, on peut lui demander tout ce qui est lié à une rupture de contrat (congés payés, indemnisation, salaire... pour la période du préavis)
+
+## Le choix du contrat - CDD / CDI
+
+À l'embauche d'un CDI on doit nous fournir un document de prévoyance
+
+Un CDD n'a pas vocation à valoir un poste définitif. C'est par définition pour une tâche précise et temporaire
+
+## La période d'essai - Le régime
+
+La durée maximale de la période d'essai est prévue dans la convention collective, sinon dans la loi. Elle est renouvelable une fois avec l'accord du salarié.
+
+Un arrêt maladie durant la période d'essai décale la période d'autant
+
+## La période d'essai - La rupture
+
+On doit respecter un délait pour rompre une période d'essai selon la durée de la période et qui de l'employeur ou du salarié souhaite la rompre. En cas de débordement de ce délai après la fin de la période d'essai, l'employeur doit verser une indemnisation pour chaque jour
+
+## Le CDD - Les cas de recours
+
+- Remplacement d'un salarié absent provisoirement
+- Acroissement temporaire d'activité
+- Travaux
+
+### Cas de recours interdits
+
+- Gréviste
+- Poste dangereux
+- Acroissement d'activité dans les 6 mois qui suivent un licenciement économique
+
+## Le CDD - Formalisme
+
+Le CDD doit être signé par le salarié et transmis à celui-ci dans les 48h qui suivent l'embauche sans quoi il pourra recevoir des indemnités pour un maximum d'un mois de salaire
+
+Il doit y avoir un unique motif au CDD, sa durée peut être imprécise exemple durée de l'arrêt maladie de M. Intel
+
+## Le CDD - La durée
+
+Voir diapo
+
+## Le CDD - Les ordonnances Macron
+
+Voir diapo
+
+## Le contrat de travail à temps partiel
+
+Voir diapo
+
+En cas de cumul de 2 temps partiels, on doit en informer nos employeurs et ils sont en droit de refuser si on ne respecte pas les 11h de repos consécutives entre 2 jours
