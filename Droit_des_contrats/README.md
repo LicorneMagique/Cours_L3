@@ -6,7 +6,7 @@
 
 ---
 
-## Partie 1
+## Partie 1 - Les contrats
 
 ---
 
@@ -54,7 +54,7 @@ Rétractation d'une offre : Elle peut être rétracté tant qu'elle n'est pas ar
 
 Offre à condition : vente de vêtements dans la limite des stocks disponibles : offre ferme car ça ne dépend pas de la volonté du contractant, à l'inverse vente d'une maison si vente acceptée sous 15 jours : offre non ferme
 
-Lorsqu'on négocie on est pas sans obligations : on a une obligation de loyauté envers l'autre parti -> Principe de bonne foie : si on stop les négociations on doit le faire de façon loyale. Par exemple négocier alors qu'on a jamais prévu d'acheter
+Lorsqu'on négocie on est pas sans obligations : on a une obligation de loyauté envers l'autre parti -> Principe de bonne foi : si on stop les négociations on doit le faire de façon loyale. Par exemple négocier alors qu'on a jamais prévu d'acheter
 
 Devoir précontractuel d'information : dans tous contrat on doit informer le contractant de tout élément déterminant de son consentement (dont il n'a pas conaissance) par exemple vendre un terrain... non constructible. Cela ne vaut pas pour un prix
 
@@ -82,7 +82,7 @@ On dispose d'un délait de prescription de 5 ans pour saisir le juge à partir d
 
 ---
 
-## Partie 2
+## Partie 2 - La forme et le contenu du contrat
 
 ---
 
@@ -130,7 +130,7 @@ On ne peut pas faire un contrat entre deux parties si le sujet du contrat appart
 
 Une fois que le tiers a donné son accord, il fait partie du contrat : il a l'obligation de tenir sa promesse
 
-## Exécution du contrat - Mise en demeure
+## Inexécution du contrat - Mise en demeure
 
 La **mise en demeure** doit contenir :
 
@@ -145,23 +145,17 @@ La **mise en demeure** doit contenir :
 
 Elle doit être envoyée en recommandée avec accusé de réception (LRAR)
 
-## Exécution du contrat - Sanctions
+## Inxécution du contrat - Sanctions communes à tous les contrats
 
-En cas de non respect du contrat on peut agir en **exécution forcée** (on finance la fin des travaux par exemple) puis on pourra saisir le juge pour demander à ce que le cocontracteur me rembourse (tant que c'est raisonnable)
+En cas de non respect du contrat on peut agir en **exécution forcée** (on finance la fin des travaux par exemple) puis on pourra saisir le juge pour demander à ce que le cocontracteur nois rembourse (tant que c'est raisonnable)
 
-Indépendamment, on peut demander des dommages-et-intérêts pour faute (selon obligation de moyen ou de résultat), préjudice
-
----
-
-## Début cours 2 à rattraper
-
----
+Indépendamment, on peut demander des dommages-et-intérêts pour faute (selon obligation de moyen ou de résultat), préjudice ou causalité
 
 ## Inexécution du contrat - Contrat synallagmatique
 
 Il n'est pas possible de mettre une clause qui interdit de saisir le juge (**clause abusive**), cependant on peut limiter au maximum le cocontractant, exemple il appartient à l'utilisateur de mettre à jour son application
 
-Inexécution du contrat : si l'un des deux parties ne remplit pas sa part du contrat dans une mesure suffisamment grave, l'autre partie peut rompre le contrat. Il est possible de définir les cas d'inexécution dans les clauses
+**Exception d'inexécution** du contrat : une partie a le droit de suspendre l'exécution de ses obligations si l'autre partie n'a pas exécuté les siennes dans une "certaine mesure". Il est possible de définir les cas d'inexécution dans les clauses
 
 ---
 
@@ -243,7 +237,9 @@ Il doit y avoir un unique motif au CDD, sa durée peut être imprécise exemple 
 
 ## Le CDD - La durée
 
-Voir diapo
+Jusqu'à **2 renouvellements** possibles du contrat pour une durée maximale de **18 mois** au total (**terme précis**)
+
+En cas de **remplacement** il y a une durée minimale mais pas maximale (**terme imprécis**)
 
 ## Le CDD - Les ordonnances Macron
 
@@ -254,3 +250,106 @@ Voir diapo
 Voir diapo
 
 En cas de cumul de 2 temps partiels, on doit en informer nos employeurs et ils sont en droit de refuser si on ne respecte pas les 11h de repos consécutives entre 2 jours
+
+---
+
+## Partie 2 - Les éléments importants du contrat de travail
+
+---
+
+## Les 4 pilliers du contrat de travail
+
+- La rémunération
+- La durée du travail (en heure)
+- Le lieu
+- La qualification
+
+L'employeur doit avoir l'accord express du salarié pour modifier l'un de ces éléments
+
+On ne peut pas licencier un salarié en cas de refus, sauf s'il a été déclaré inerte pour son travail et qu'on lui a proposé un autre poste qu'il peut faire et qu'il refuse ce poste -> licenciment pour motif personnel
+
+Certains éléments sont mofitiables comme la répartition des heures ou la liste (non exhaustive) de ses tâches
+
+LE CAS SPÉCIFIQUE : le **salarié protégé** (quand on est juge)
+
+## Le lieu de travail
+
+On peut modifier le lieu de travail si muté dans le même secteur géographique (sous réserve de respecter un délai raisonnable)
+
+Avec la **clause de mobilité** on peut se passer de l'accord du salarié tant qu'on respecte sa vie familiale et personnelle
+
+## Le salaire
+
+Le salaire doit respecter le minimum des conventions collectives
+
+Les **avantages en nature** (voiture de fonction, tickets resto...) doivent figurer sur le bulletin de paie. Certains sont obligatoires dans les conventions collectives
+
+Certaines primes sont subordonnées à des conditions objectives et préalablement définies, si les conditions sont changées au dernier moment c'est la  prime de l'année d'avant qui servira de référence
+
+Les **frais professionnels** sont soit remboursés au réel soit selon un forfait
+
+## La fixation du salaire
+
+Pour le respect du SMIC on prend en compte les primes et les avantages en nature.
+
+En cas de salaire variable, l'employeur doit respecter d'assurer au minimmum le SMIC
+
+## Le salaire - Modalités de paiement
+
+Mensualisation obligatoire, toujours le même salaire de base + heures sup
+
+Obligation de fournir un bulletin de paie
+
+En théorie le lieu de paiement est l'entreprise
+
+En cas de non paiement on dispose d'un délai préscription de 3 ans pour réclamer un salaire
+
+## La durée du travail
+
+Le temps de travail c'est quand le salarié est à la disposition de l'employeur et se conforme à ses directives
+
+C'est à l'employeur de suivre le temps de travail de l'employé, cependant pour les heures sup le salarié doit pouvoir **laisser penser** qu'il en a bien fait (noter ses heures sur un papier), ensuite c'est à l'employeur de prouver que c'est faut en cas de litige.
+
+Il est interdit de faire plus de 13h d'**emplitude** de travail (donc en comptant la pause déjeuner)
+
+Les heures sup doivent être faites à la demande (directe ou indirecte) de l'employeur
+
+Les heures complémentaires sont les heures faites entre la durée contractuelle d'un temps partiel et 34h (car 35h = temps plein). Ces heures ont légalement une majoration de 25% mais les conventions collectives peuvent le faire descendre à 10%
+
+En principe on fait MAXIMUM 220h sup par année, au delà il faut faire des repos
+
+## Les pauses
+
+Il faut obligatoirement 20 minutes à partir de 6h de travail.
+
+La durée quotidienne de travail maximale est de 10/j sauf exceptions
+
+On peut faire max 48h par semaine avec une moyenne de 44h sur 12 semaines consécutives
+
+Repos obligatoire : le repos hebdomadaire c'est 24h consécutives (48h pour les mineurs) en plus des 11h du repos quotidien
+
+## Les clauses particulières
+
+- Clause de **dédit formation** : l'employeur a payé une formation pour le salarié, en échange le salarié s'engage à travailler X temps pour l'entreprise
+
+- Clause de mobilité : voir au dessus
+
+- Clause d'**exclusivité** (temps plein uniquement) : pas le droit de travailler ailleurs
+
+- Clause de **non-concurence** (post contractuelle) : cette clause est limitée à une activité spécifique, limitée dans le temps, limitée à un espace et il y a une contrepartie financière pour l'employeur. Il est possible de renoncer à cette clause, souvent il y a un délai écrit dans la clause pour que l'employeur renonce à celle-ci après la fin du contrat.
+
+## Les obligations du salarié
+
+Ne pas oublier que le salarié n'est pas tenu de respecter les instruction de son supérieur hiérarchique en cas de directive ilicite
+
+Dénigrer son employeur sur les réseaux sociaux PUBLIQUES est un abus de sa liberté d'expression, globalement ce n'est plus un abus lorsque c'est sur un groupe privé
+
+Voir diapo
+
+## Les obligations de l'employeur
+
+Globalement il faut respecter le contrat de bonne foi, on ne peut pas faire faire n'importe quoi au salarié
+
+Il faut respecter toutes les réglementations
+
+L'employeur a une obligation de moyen dans la bonne santé mentale et physique de ses salariés
