@@ -1,0 +1,19 @@
+Petit exemple de programme de messagerie instantanée (chat) en réseau.
+
+Pour compiler et exécuter :
+
+  make
+  ./chat.exx 1234 &
+  ./chat.exx localhost 1234 &
+
+Rôle des fichiers :
+
+* chat.cpp : fichier principal. Contient en particulier toute la
+  gestion des threads.
+
+* chat_squelette.cpp : version « à trous » du fichier chat.cpp.
+
+* socklib.{cpp,hpp} : bibliothèque de manipulation de sockets réseaux.
+
+* fichier_interdit.cpp : parties du code hors-programme (interface
+  graphique en Gtk, ...).
