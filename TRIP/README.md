@@ -51,3 +51,5 @@ Compétence : activation de plusieurs savoirs dans un  contexte donné
 ---
 
 Il est valorisant d'énoncer ses compétences par un verbe d'action
+
+---
