@@ -30,3 +30,19 @@ Différence entre **polymorphisme** et l'**héritage** :
 - Polymorphisme : utilisation d'un même nom de méthode pour plusieurs types d'objets différents
 
 Bien respecter la syntaxe UML page 54 du [diapo](Cours.pdf)
+
+## Diagrammes
+
+### Cas d'utilisation (Use Case)
+
+Tout ce qui est **directement** visible par l'utilisateur ainsi que les **include** et **extends**
+
+**Pour** retirer de l'argent **il faut** s'identifier : *retirer* -> **include** -> *s'autentifier*
+
+**En** retirant de l'argent **on peut** voir le solde : *retirer* -> **extends** -> *voir solde*
+
+Pas besoin de relations redondantes lorsqu'on a de l'héritage :
+
+![héritage](use_case_héritage.png)
+
+-> Le client fidèle hérite de *Use case 1*
