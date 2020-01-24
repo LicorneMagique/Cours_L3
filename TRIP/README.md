@@ -2,6 +2,8 @@
 
 Thierry VITOZ [thierry.vitoz@univ-lyon3.fr](thierry.vitoz@univ-lyon3.fr)
 
+Rendu du dossier : le 13 février
+
 ---
 
 ## Projet professionnel
