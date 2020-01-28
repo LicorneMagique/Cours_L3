@@ -51,7 +51,8 @@ void fct(int num, int nbtours, double &temps)
             exit(EXIT_FAILURE);
         }
         double duree = timevalsub(&tv1, &tv2);
-        temps_total += duree;
+        //temps_total += duree;
+        temps_total = duree;
 
         // Version avec "cerr" si on veut voir les problèmes
         // d'entrelacement des sorties :
@@ -92,6 +93,15 @@ int main(int argc, char **argv)
     }
     cout << "Th principal : lancement de " << nbthreads << " fois la fonction"
          << endl;
+    
+    struct timeval tv1, tv2;
+    int err;
+    err = gettimeofday(&tv1, NULL);
+    if (err != 0)
+    {
+        perror("gettimeofday");
+        exit(EXIT_FAILURE);
+    }
 
     vector <thread*> threads;
     double temps[nbthreads];
@@ -105,11 +115,16 @@ int main(int argc, char **argv)
     for (i = 0; i < nbthreads; i++)
     {
         threads[i]->join();
-    }
-    for (i = 0; i < nbthreads; i++)
-    {
         temps_fictif += temps[i];
     }
+
+    err = gettimeofday(&tv2, NULL);
+    if (err != 0)
+    {
+        perror("gettimeofday");
+        exit(EXIT_FAILURE);
+    }
+    temps_reel = timevalsub(&tv1, &tv2);
 
     cout << "Th principal : Le temps réel de calcul est " << temps_reel << endl;
     cout << "Th principal : Le temps fictif de calcul est " << temps_fictif << endl;
