@@ -51,8 +51,7 @@ void fct(int num, int nbtours, double &temps)
             exit(EXIT_FAILURE);
         }
         double duree = timevalsub(&tv1, &tv2);
-        //temps_total += duree;
-        temps_total = duree;
+        temps_total += duree;
 
         // Version avec "cerr" si on veut voir les problèmes
         // d'entrelacement des sorties :
@@ -66,7 +65,7 @@ void fct(int num, int nbtours, double &temps)
     // fin de la partie calcul
     // ###########################
 
-    temps = temps_total;
+    temps = temps_total / nbtours;
 }
 
 int main(int argc, char **argv)

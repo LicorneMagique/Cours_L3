@@ -41,8 +41,33 @@ Tout ce qui est **directement** visible par l'utilisateur ainsi que les **includ
 
 **En** retirant de l'argent **on peut** voir le solde : *retirer* -> **extends** -> *voir solde*
 
-Pas besoin de relations redondantes lorsqu'on a de l'héritage :
-
+Pas besoin de relations redondantes lorsqu'on a de l'héritage  
 ![héritage](use_case_héritage.png)
 
 -> Le client fidèle hérite de *Use case 1*
+
+### Diagramme de classes
+
+- Public : "+"
+- Protégé : "#" -> accessible depuis les sous-classes
+- Privé : "-" -> non accessible depuis les sous-classes
+
+![Accès sur les attributs/méthodes d'une classe](acces_diag_classe.png)
+
+Personne contient un attribut du type société  
+![Flèche relation](fleche_diag_classe.png)
+
+L'**agrégat** est plus important que l'agrégé mais les deux sont **associés l'un à l'autre** (un peintre et son oeuvre, une personne et son habitation...)  
+![Agrégat](agregat_diag_classe.png)
+
+La **composition** est une agrégation où l'agrégé est **physiquement contenu** dans l'agrégat  
+![Composition](composition_diag_classe.png)
+
+### Diagramme d'objets
+
+#### Exemple simple de nomage
+
+![nom](nom_diag_objet.png)
+
+En cas d'héritage dans un diagramme de classe (boisson <- coca | thé), la classe abstraite n'apparait pas dans le diagramme d'objet : on représente une vraie instance  
+![Conversion héritage classe vers objet](conv_heritage_classe_objet.png)

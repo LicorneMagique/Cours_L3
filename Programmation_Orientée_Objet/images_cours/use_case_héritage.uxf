@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?><diagram program="umlet" version="13.3">
+  <zoom_level>10</zoom_level>
+  <element>
+    <type>com.baselet.element.old.element.Taxonomy_of_Actors</type>
+    <coordinates>
+      <x>50</x>
+      <y>160</y>
+      <w>200</w>
+      <h>140</h>
+    </coordinates>
+    <panel_attributes>Client
+	Client fidèle
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <type>com.baselet.element.old.element.Taxonomy_of_Workprocesses</type>
+    <coordinates>
+      <x>290</x>
+      <y>160</y>
+      <w>200</w>
+      <h>140</h>
+    </coordinates>
+    <panel_attributes>Use case 1
+
+Use case 2</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <type>com.baselet.element.old.element.Relation</type>
+    <coordinates>
+      <x>110</x>
+      <y>160</y>
+      <w>210</w>
+      <h>50</h>
+    </coordinates>
+    <panel_attributes/>
+    <additional_attributes>190;30;30;30</additional_attributes>
+  </element>
+  <element>
+    <type>com.baselet.element.old.element.Relation</type>
+    <coordinates>
+      <x>200</x>
+      <y>210</y>
+      <w>120</w>
+      <h>60</h>
+    </coordinates>
+    <panel_attributes/>
+    <additional_attributes>100;30;30;40</additional_attributes>
+  </element>
+</diagram>
