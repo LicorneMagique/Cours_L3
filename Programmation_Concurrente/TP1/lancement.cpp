@@ -65,7 +65,7 @@ void fct(int num, int nbtours, double &temps)
     // fin de la partie calcul
     // ###########################
 
-    temps = temps_total / nbtours;
+    temps = temps_total;
 }
 
 int main(int argc, char **argv)
@@ -109,7 +109,6 @@ int main(int argc, char **argv)
         threads.push_back(new thread(fct, i, nbtours, std::ref(temps[i])));
     }
     
-    double temps_reel = 0;
     double temps_fictif = 0;
     for (i = 0; i < nbthreads; i++)
     {
@@ -117,16 +116,7 @@ int main(int argc, char **argv)
         temps_fictif += temps[i];
     }
 
-    err = gettimeofday(&tv2, NULL);
-    if (err != 0)
-    {
-        perror("gettimeofday");
-        exit(EXIT_FAILURE);
-    }
-    temps_reel = timevalsub(&tv1, &tv2);
-
-    cout << "Th principal : Le temps réel de calcul est " << temps_reel << endl;
-    cout << "Th principal : Le temps fictif de calcul est " << temps_fictif << endl;
+    cout << "Th principal : Le temps total de calcul est " << temps_fictif << endl;
 
     return 0;
 }
