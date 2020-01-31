@@ -43,13 +43,14 @@ problem.addConstraint(lambda a, b: 12 * a + 16 * b <= 2880, ("a", "b"))
 
 solutions = problem.getSolutions()
 
-bestSolution = dict()
-bestSolution['val'] = -1
+bestVal = -1
 for solution in solutions:
     val = 350 * solution['a'] + 300 * solution['b']
-    if val > bestSolution['val']:
-        bestSolution = solution
-        bestSolution['val'] = val
+    bestVal = val if val > bestVal else bestVal
+print("val = ", bestVal)
 
-print(bestSolution)
+for solution in solutions:
+    if 350 * solution['a'] + 300 * solution['b'] == bestVal:
+        print(solution)
+
 ```
