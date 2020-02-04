@@ -1,1 +1,4 @@
 main
+main.o
+mandel.o
+display.o
