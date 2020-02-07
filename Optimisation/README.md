@@ -28,29 +28,33 @@ Contraintes :
 `nbA >= 0`
 `nbB >= 0`
 
-
-### Modélisation et résolution du problème
+### Modélisation et résolution du problème - OR-Tools
 
 ```python
-from constraint import *
+# Import de la librairie Python de OR-Tools
+from ortools.sat.python import cp_model
 
-problem = Problem()
-problem.addVariable("a", range(0, 201))
-problem.addVariable("b", range(0, 201))
-problem.addConstraint(lambda a, b: a+b <= 200, ("a", "b"))
-problem.addConstraint(lambda a, b: 9 * a + 6 * b <= 1566, ("a", "b"))
-problem.addConstraint(lambda a, b: 12 * a + 16 * b <= 2880, ("a", "b"))
+# Création du model
+model = cp_model.CpModel()
 
-solutions = problem.getSolutions()
+# Initialisation des variables sur [0, 201[
+a = model.NewIntVar(0, 201, 'a')
+b = model.NewIntVar(0, 201, 'b')
 
-bestVal = -1
-for solution in solutions:
-    val = 350 * solution['a'] + 300 * solution['b']
-    bestVal = val if val > bestVal else bestVal
-print("val = ", bestVal)
+# Objectif : formule de Z à maximiser
+model.Maximize(350 * a + 300 * b)
 
-for solution in solutions:
-    if 350 * solution['a'] + 300 * solution['b'] == bestVal:
-        print(solution)
+# Ajout des contraintes arithmétiques
+model.Add(a+b <= 200)
+model.Add(9 * a + 6 * b <= 1566)
+model.Add(12 * a + 16 * b <= 2880)
+
+# Résolution du problème
+solver = cp_model.CpSolver()
+solver.Solve(model)
+
+print("Z =", solver.ObjectiveValue())
+print("a =", solver.Value(a))
+print("b =", solver.Value(b))
 
 ```
