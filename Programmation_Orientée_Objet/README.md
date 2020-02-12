@@ -73,3 +73,9 @@ En cas d'héritage dans un diagramme de classe (boisson <- coca | thé), la clas
 ![Conversion héritage classe vers objet](images_cours/conv_heritage_classe_objet.png)
 
 ### Diagramme de séquence
+
+Dans un diagramme de séquence on ne montre que les méthodes qui ont un rapport avec l'utilisateur. Par exemple si le client prends une boisson, la fonction "met à jour le nombre de boisson" ne  doit pas figurer dans le diagramme
+
+### Diagramme d'états-transition
+
+C'est dans ce diagramme qu'on peut détailler les transitions internes des objets du modèle, autrement dit c'est ici qu'on va voir l'instruction "met à jour le nombre de boisson"
