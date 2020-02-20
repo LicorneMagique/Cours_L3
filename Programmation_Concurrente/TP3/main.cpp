@@ -12,6 +12,7 @@
 #include <thread>
 #include <vector>
 #include <mutex>
+#include <condition_variable>
 
 #include "mandel.h"
 #include "display.h"
@@ -27,6 +28,8 @@ static int last_slice;
 
 static std::mutex m_slice;
 static std::mutex m_draw;
+
+static bool stop = 1;
 
 void init_iteration() {
 	last_slice = 0;
@@ -57,12 +60,12 @@ int get_slice() {
 void draw_slice(int slice_number) {
 	int y;
 	bool warning_emitted = false;
-	
 	if (verbose > 0)
 		std::cout << "Starting slice " << slice_number << std::endl;
 	for (y = 0; y < height; y += rect_height) {
 		compute_rect(slice_number, y, warning_emitted);
         m_draw.lock();
+        //prod_cons.put(rect(slice_number, y));
         draw_rect(slice_number, y);
         m_draw.unlock();
 	}
@@ -70,25 +73,45 @@ void draw_slice(int slice_number) {
 		std::cout << "Finished slice " << slice_number << std::endl;
 }
 
-
-void draw_screen_worker() {
-	while (1) {
-		int i;
-		i = get_slice();
-		if (i == -1)
-			return;
-		draw_slice(i);
+void draw_slice_worker(int slice_number, ProdCons& p) {
+	int y;
+	bool warning_emitted = false;
+	if (verbose > 0)
+		std::cout << "Starting slice " << slice_number << std::endl;
+    // if (slice_number == -1) {
+    //     //cout << "fin d'un thread de calcul" << endl;
+    //     return;
+    // }
+	for (y = 0; y < height; y += rect_height) {
+		compute_rect(slice_number, y, warning_emitted);
+        p.put(rect(slice_number, y));
 	}
 }
 
-void draw_slice_thread() {
+void draw_screen_consommateur(ProdCons& p) {
+    int compteur = 0;
+    while (stop) {
+        rect r = p.get();
+        if (r.slice_number == -1) {
+            cout << "toto" << endl;
+            compteur++;
+            cout << "compteur : " << compteur << endl;
+        }
+        else
+            draw_rect(r.slice_number, r.y_start);
+    }
+    cout << "je suis sorti" << endl;
+}
+
+void draw_screen_worker(ProdCons& p) {
     int i;
-    while (last_slice < number_of_slices) {
+    while (i != -1) {
         m_slice.lock();
         i = get_slice();
         m_slice.unlock();
-        draw_slice(i);
+        draw_slice_worker(i, std::ref(p));
     }
+    cout << "je suis un thread de calcul qui a fini" << endl;
 }
 
 /* Multi-threaded version of draw_screen_sequential.
@@ -96,12 +119,19 @@ void draw_slice_thread() {
 int draw_screen_thread() { // Instancier ProdCons isi
     int i;
     vector <thread*> threads;
+    ProdCons p(10);
+    thread consommateur(draw_screen_consommateur, std::ref(p));
 	for (i = 0; i < number_of_threads; i++) {
-        threads.push_back(new thread(draw_slice_thread));
+        threads.push_back(new thread(draw_screen_worker, std::ref(p)));
 	}
 	for (i = 0; i < number_of_threads; i++) {
 		threads[i]->join();
 	}
+    cout << "threads joined" << endl;
+    stop = false;
+    p.getVide().notify_one();
+    consommateur.join();
+    cout << "conso joined" << endl;
     return last_slice;
 
 }

@@ -79,3 +79,7 @@ Dans un diagramme de séquence on ne montre que les méthodes qui ont un rapport
 ### Diagramme d'états-transition
 
 C'est dans ce diagramme qu'on peut détailler les transitions internes des objets du modèle, autrement dit c'est ici qu'on va voir l'instruction "met à jour le nombre de boisson"
+
+### Diagramme d'activité
+
+Algorigramme
