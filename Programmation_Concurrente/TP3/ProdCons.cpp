@@ -15,30 +15,24 @@ ProdCons::ProdCons(int t) {
     taille_max = t;
 }
 
-ProdCons::~ProdCons() {
-    delete &file;
-}
+ProdCons::~ProdCons(){}
 
 void ProdCons::put(rect i) {
     unique_lock<std::mutex> l(m);
     while (file.size() == taille_max) {
-        //cout << "plein.wait" << endl;
         plein.wait(l);
     }
     file.push(i);
-    //cout << "vide.notify" << endl;
     vide.notify_one();
 }
 
 rect ProdCons::get() {
     unique_lock<std::mutex> l(m);
-    if (file.empty()) {
-        //cout << "vide.wait" << endl;
+    while (file.size() == 0) {
         vide.wait(l);
     }
     rect i = file.front();
     file.pop();
-    //cout << "plein.notify" << endl;
     plein.notify_one();
     return i;
 }

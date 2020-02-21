@@ -27,9 +27,6 @@ using namespace std;
 static int last_slice;
 
 static std::mutex m_slice;
-static std::mutex m_draw;
-
-static bool stop = 1;
 
 void init_iteration() {
 	last_slice = 0;
@@ -64,10 +61,7 @@ void draw_slice(int slice_number) {
 		std::cout << "Starting slice " << slice_number << std::endl;
 	for (y = 0; y < height; y += rect_height) {
 		compute_rect(slice_number, y, warning_emitted);
-        m_draw.lock();
-        //prod_cons.put(rect(slice_number, y));
         draw_rect(slice_number, y);
-        m_draw.unlock();
 	}
 	if (verbose > 0)
 		std::cout << "Finished slice " << slice_number << std::endl;
@@ -76,42 +70,35 @@ void draw_slice(int slice_number) {
 void draw_slice_worker(int slice_number, ProdCons& p) {
 	int y;
 	bool warning_emitted = false;
+
 	if (verbose > 0)
 		std::cout << "Starting slice " << slice_number << std::endl;
-    // if (slice_number == -1) {
-    //     //cout << "fin d'un thread de calcul" << endl;
-    //     return;
-    // }
 	for (y = 0; y < height; y += rect_height) {
 		compute_rect(slice_number, y, warning_emitted);
         p.put(rect(slice_number, y));
 	}
-}
-
-void draw_screen_consommateur(ProdCons& p) {
-    int compteur = 0;
-    while (stop) {
-        rect r = p.get();
-        if (r.slice_number == -1) {
-            cout << "toto" << endl;
-            compteur++;
-            cout << "compteur : " << compteur << endl;
-        }
-        else
-            draw_rect(r.slice_number, r.y_start);
-    }
-    cout << "je suis sorti" << endl;
+	if (verbose > 0)
+		std::cout << "Finished slice " << slice_number << std::endl;
 }
 
 void draw_screen_worker(ProdCons& p) {
-    int i;
-    while (i != -1) {
+    while (1) {
         m_slice.lock();
-        i = get_slice();
+        int i = get_slice();
         m_slice.unlock();
+        if (i == -1)
+            return;
         draw_slice_worker(i, std::ref(p));
     }
-    cout << "je suis un thread de calcul qui a fini" << endl;
+}
+
+void draw_screen_consommateur(ProdCons& p) {
+    while (1) {
+        rect r = p.get();
+        if (r.slice_number == -1)
+            return;
+        draw_rect(r.slice_number, r.y_start);
+    }
 }
 
 /* Multi-threaded version of draw_screen_sequential.
@@ -127,11 +114,9 @@ int draw_screen_thread() { // Instancier ProdCons isi
 	for (i = 0; i < number_of_threads; i++) {
 		threads[i]->join();
 	}
-    cout << "threads joined" << endl;
-    stop = false;
+    p.put(rect(-1, 0));
     p.getVide().notify_one();
     consommateur.join();
-    cout << "conso joined" << endl;
     return last_slice;
 
 }
@@ -252,7 +237,7 @@ int main(int argc, char ** argv) {
 			  << std::endl;
 
 
-		sleep(10);
+		sleep(5);
 		if (auto_resize) resize_according_to_mouse();
 		if (! auto_loop) exit(0);
 	}
